@@ -22,19 +22,19 @@ register("command", (args) => {
     let vanqModeState;
     switch (vanqMode) {
       case 0:
-        vanqModeState = "§f§lALL";
+        vanqModeState = "§f§lALL!";
         vanqMode = 1;
         break;
       case 1:
-        vanqModeState = "§9§lPARTY";
+        vanqModeState = "§9§lPARTY!";
         vanqMode = 2;
         break;
       case 2:
-        vanqModeState = "§2§lGUILD";
+        vanqModeState = "§2§lGUILD!";
         vanqMode = 3;
         break;
       case 3:
-        vanqModeState = "§c§lOFF";
+        vanqModeState = "§c§lOFF!";
         vanqMode = 0;
         break;
       default:
@@ -54,7 +54,7 @@ register("command", (args) => {
     ChatLib.chat(
       dripToolsPrefix +
         "§aAuto PV is now " +
-        (autoPVToggle ? "§a§lON" : "§c§lOFF")
+        (autoPVToggle ? "§a§lON!" : "§c§lOFF!")
     );
   }
 
@@ -64,7 +64,7 @@ register("command", (args) => {
     ChatLib.chat(
       dripToolsPrefix +
         "Implosion hider is now " +
-        (implosionHiderToggle ? "§a§lON" : "§c§lOFF")
+        (implosionHiderToggle ? "§a§lON!" : "§c§lOFF!")
     );
   }
 
@@ -74,7 +74,7 @@ register("command", (args) => {
     ChatLib.chat(
       dripToolsPrefix +
         "Kick timer is now " +
-        (kickTimerToggle ? "§a§lON" : "§c§lOFF")
+        (kickTimerToggle ? "§a§lON!" : "§c§lOFF!")
     );
   }
 
@@ -83,27 +83,37 @@ register("command", (args) => {
       dripToolsPrefix +
         "Current watchdog message is: " +
         watchDogMessage +
-        " Use /wdm <message> to change it!"
+        "\n§aUse /wdm <message> to change it! (Max 20 words) Leave blank to disable!"
     );
   }
-}).setName("dt");
+}).setName("driptools").setAliases(["dt"]);
 
-register("command", (args) => {
+register("command", () => {
   implosionHiderToggle = !implosionHiderToggle;
 
   ChatLib.chat(
     dripToolsPrefix +
       "Implosion hider is now " +
-      (implosionHiderToggle ? "§a§lON" : "§c§lOFF")
+      (implosionHiderToggle ? "§a§lON!" : "§c§lOFF!")
   );
 }).setName("ih");
 
-register("command", (args) => {
-  // watchDogMessage = args.join(" ");
+register("command", (args, args2, args3, args4, args5, args6, args7, args8, args9, args10, args11, args12, args13, args14, args15, args16, args17, args18, args19, args20) => {
+  watchDogMessage = "";
+  if (args == null || args == "") {
+    ChatLib.chat(dripToolsPrefix + "Watchdog message §c§lDISABLED!");
+    return;
+  }
+  var arguments = [args, args2, args3, args4, args5, args6, args7, args8, args9, args10, args11, args12, args13, args14, args15, args16, args17, args18, args19, args20];
 
-  watchDogMessage = args;
 
-  ChatLib.chat(args);
+
+  for(i = 0; i < arguments.length; i++) {
+    if (arguments[i] == null) {
+      arguments[i] = "";
+    }
+    watchDogMessage += arguments[i] + " ";
+  }
 
   ChatLib.chat(dripToolsPrefix + "Watchdog message set to: " + watchDogMessage);
 }).setName("wdm");
@@ -198,9 +208,12 @@ register("chat", (event) => {
 });
 
 register("chat", (event) => {
-  let message = ChatLib.getChatMessage(event, true);
+  if (watchDogMessage.isempty()) {
+    return;
+  }
 
+  let message = ChatLib.getChatMessage(event, true);
   if (message.includes("&4[WATCHDOG ANNOUNCEMENT]&r")) {
-    ChatLib.command(watchDogMessage);
+    ChatLib.command("ac " + watchDogMessage);
   }
 });
