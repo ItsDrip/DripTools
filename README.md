@@ -1,6 +1,6 @@
 # DripTools 
 
-DripTools is a chattriggers module made for QOL changes.
+DripTools is a ChatTriggers module made for QOL changes. Skyblock module for Minecraft
 
 To toggle settings ingame use:
 
