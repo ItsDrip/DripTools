@@ -73,7 +73,7 @@ register("command", (args) => {
 
     ChatLib.chat(
       dripToolsPrefix +
-        "Kick timer is now " +
+        "Kicked message is now " +
         (kickTimerToggle ? "§a§lON!" : "§c§lOFF!")
     );
   }
