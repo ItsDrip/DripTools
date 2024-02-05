@@ -8,6 +8,7 @@ let autoPVToggle = false;
 let implosionHiderToggle = false;
 let kickTimerToggle = false;
 let watchDogMessage = "Thanks, Watchdog!";
+let watchDogHider = false;
 
 const usages = ["/dt vanq", "/dt pv", "/dt ih", "/dt kt"];
 
@@ -86,7 +87,19 @@ register("command", (args) => {
         "\n§aUse /wdm <message> to change it! (Max 20 words) Leave blank to disable!"
     );
   }
-}).setName("driptools").setAliases(["dt"]);
+
+  if (args == " wdh" || args == "watchdoghider") {
+    watchDogHider = !watchDogHider;
+
+    ChatLib.chat(
+      dripToolsPrefix +
+        "Watchdog hider is now" +
+        (watchDogHider ? "§a§lON!" : "§c§lOFF!")
+    );
+  }
+})
+  .setName("driptools")
+  .setAliases(["dt"]);
 
 register("command", () => {
   implosionHiderToggle = !implosionHiderToggle;
@@ -98,25 +111,70 @@ register("command", () => {
   );
 }).setName("ih");
 
-register("command", (args, args2, args3, args4, args5, args6, args7, args8, args9, args10, args11, args12, args13, args14, args15, args16, args17, args18, args19, args20) => {
-  watchDogMessage = "";
-  if (args == null || args == "") {
-    ChatLib.chat(dripToolsPrefix + "Watchdog message §c§lDISABLED!");
-    return;
-  }
-  var arguments = [args, args2, args3, args4, args5, args6, args7, args8, args9, args10, args11, args12, args13, args14, args15, args16, args17, args18, args19, args20];
-
-
-
-  for(i = 0; i < arguments.length; i++) {
-    if (arguments[i] == null) {
-      arguments[i] = "";
+register(
+  "command",
+  (
+    args,
+    args2,
+    args3,
+    args4,
+    args5,
+    args6,
+    args7,
+    args8,
+    args9,
+    args10,
+    args11,
+    args12,
+    args13,
+    args14,
+    args15,
+    args16,
+    args17,
+    args18,
+    args19,
+    args20
+  ) => {
+    watchDogMessage = "";
+    if (args == null || args == "") {
+      ChatLib.chat(dripToolsPrefix + "Watchdog message §c§lDISABLED!");
+      return;
     }
-    watchDogMessage += arguments[i] + " ";
-  }
+    var arguments = [
+      args,
+      args2,
+      args3,
+      args4,
+      args5,
+      args6,
+      args7,
+      args8,
+      args9,
+      args10,
+      args11,
+      args12,
+      args13,
+      args14,
+      args15,
+      args16,
+      args17,
+      args18,
+      args19,
+      args20,
+    ];
 
-  ChatLib.chat(dripToolsPrefix + "Watchdog message set to: " + watchDogMessage);
-}).setName("wdm");
+    for (i = 0; i < arguments.length; i++) {
+      if (arguments[i] == null) {
+        arguments[i] = "";
+      }
+      watchDogMessage += arguments[i] + " ";
+    }
+
+    ChatLib.chat(
+      dripToolsPrefix + "Watchdog message set to: " + watchDogMessage
+    );
+  }
+).setName("wdm");
 
 register("chat", (event) => {
   if (
@@ -208,12 +266,36 @@ register("chat", (event) => {
 });
 
 register("chat", (event) => {
-  if (watchDogMessage.isempty()) {
+  if (
+    watchDogMessage == null ||
+    watchDogMessage == "" ||
+    watchDogMessage == " "
+  ) {
     return;
   }
 
   let message = ChatLib.getChatMessage(event, true);
-  if (message.includes("&4[WATCHDOG ANNOUNCEMENT]&r")) {
-    ChatLib.command("ac " + watchDogMessage);
+  if (message.includes("[WATCHDOG ANNOUNCEMENT]")) {
+    ChatLib.command("say " + watchDogMessage);
+  }
+});
+
+register("chat", (event) => {
+  if (!watchDogHider) {
+    return;
+  }
+
+  let message = ChatLib.getChatMessage(event, true);
+  let lineOneRegex =
+    /§fWatchdog has banned §r§c§l(\d{1,3}(,\d{3})*|\d+)§r§f players in the last 7 days.§r/;
+  let lineTwoRegex =
+    /§fStaff have banned an additional §r§c§l(\d{1,3}(,\d{3})*|\d+)§r§f in the last 7 days.§r/;
+  if (
+    message.includes("§4[WATCHDOG ANNOUNCEMENT]§r") ||
+    message.includes("§cBlacklisted modifications are a bannable offense!§r") ||
+    lineOneRegex.test(message) ||
+    lineTwoRegex.test(message)
+  ) {
+    cancel(event);
   }
 });
