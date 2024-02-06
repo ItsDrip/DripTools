@@ -2,7 +2,7 @@
   "$schema": "../CTAutocomplete/schema.json",
   "name": "DripTools",
   "creator": "ItsDirk",
-  "description": "Useful addons for vanqs and dungeons (WIP)",
-  "version": "0.1.2",
+  "description": "Useful general QOl features",
+  "version": "0.1.3",
   "entry": "index.js"
 }
