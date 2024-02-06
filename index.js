@@ -8,6 +8,7 @@ let autoPVToggle = false;
 let implosionHiderToggle = false;
 let kickTimerToggle = false;
 let watchDogMessage = "Thanks, Watchdog!";
+let bingoMessage = "Tysm!";
 
 const usages = ["/dt vanq", "/dt pv", "/dt ih", "/dt kt"];
 
@@ -90,6 +91,15 @@ register("command", (args) => {
         "\n§aUse /wdm <message> to change it! (Max 20 words) Leave blank to disable!"
     );
   }
+
+  if (args == "bm" || args == "bingo") {
+    ChatLib.chat(
+      dripToolsPrefix +
+        "Current bingo message is: " +
+        bingoMessage +
+        "\n§aUse /bm <message> to change it! (Max 20 words) Leave blank to disable!"
+    );
+  }
 }).setName("driptools").setAliases(["dt"]);
 
 register("command", () => {
@@ -121,6 +131,32 @@ register("command", (args, args2, args3, args4, args5, args6, args7, args8, args
 
   ChatLib.chat(dripToolsPrefix + "Watchdog message set to: " + watchDogMessage);
 }).setName("wdm");
+
+register("command", (args, args2, args3, args4, args5, args6, args7, args8, args9, args10, args11, args12, args13, args14, args15, args16, args17, args18, args19, args20) => {
+  bingoMessage = "";
+  if (args == null || args == "") {
+    ChatLib.chat(dripToolsPrefix + "Bingo message §c§lDISABLED!");
+    return;
+  }
+  var arguments = [args, args2, args3, args4, args5, args6, args7, args8, args9, args10, args11, args12, args13, args14, args15, args16, args17, args18, args19, args20];
+  
+  for(i = 0; i < arguments.length; i++) {
+    if (arguments[i] == null) {
+      arguments[i] = "";
+    }
+    bingoMessage += arguments[i] + " ";
+  }
+
+  ChatLib.chat(dripToolsPrefix + "Bingo message set to: " + bingoMessage);
+}).setName("bm").setAliases(["bingomessage"]);
+
+register("command", () => {
+  if (bingoMessage.isempty()) {
+    return;
+  }
+
+  ChatLib.command("ac " + bingoMessage);
+}).setName("bingo").setAliases(["bongo"]);
 
 register("chat", (event) => {
   if (
