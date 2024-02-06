@@ -34,6 +34,10 @@ register("command", (args) => {
         vanqMode = 3;
         break;
       case 3:
+        vanqModeState = "§b§lCOOP!";
+        vanqMode = 4;
+        break;
+      case 4:
         vanqModeState = "§c§lOFF!";
         vanqMode = 0;
         break;
@@ -136,6 +140,9 @@ register("chat", (event) => {
         break;
       case 3:
         messagePrefix = "gc A Vanquisher has spawned at ";
+        break;
+      case 4:
+        messagePrefix = "cc A Vanquisher has spawned at ";
         break;
       default:
         return;
