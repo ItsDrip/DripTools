@@ -4,14 +4,14 @@
 const dripToolsPrefix = "§5§kA§a[§bDripTools§a]§5§kA§r§a ";
 
 let vanqMode = 0;
-let autoPVToggle = false;
+// let autoPVToggle = false;
 let implosionHiderToggle = false;
 let kickTimerToggle = false;
 let watchDogMessage = "Thanks, Watchdog!";
 let watchDogHider = false;
 let bingoMessage = "Tysm!";
 
-const usages = ["/dt vanq", "/dt pv", "/dt ih", "/dt kt"];
+const usages = ["/dt vanq", "/dt ih", "/dt kt", "/dt wdm", "/dt wdh", "/dt bm"];
 
 register("command", (args) => {
   if (args == null || args == "help") {
@@ -54,15 +54,15 @@ register("command", (args) => {
     return;
   }
 
-  if (args == "pv" || args == "autopv") {
-    autoPVToggle = !autoPVToggle;
+  // if (args == "pv" || args == "autopv") {
+  //   autoPVToggle = !autoPVToggle;
 
-    ChatLib.chat(
-      dripToolsPrefix +
-        "§aAuto PV is now " +
-        (autoPVToggle ? "§a§lON!" : "§c§lOFF!")
-    );
-  }
+  //   ChatLib.chat(
+  //     dripToolsPrefix +
+  //       "§aAuto PV is now " +
+  //       (autoPVToggle ? "§a§lON!" : "§c§lOFF!")
+  //   );
+  // }
 
   if (args == "ih") {
     implosionHiderToggle = !implosionHiderToggle;
@@ -84,7 +84,12 @@ register("command", (args) => {
     );
   }
 
-  if (args == "wd" || args == "watchdog") {
+  if (
+    args == "wd" ||
+    args == "watchdog" ||
+    args == "wdm" ||
+    args == "watchdogmessage"
+  ) {
     ChatLib.chat(
       dripToolsPrefix +
         "Current watchdog message is: " +
@@ -93,27 +98,27 @@ register("command", (args) => {
     );
   }
 
-  if (args == " wdh" || args == "watchdoghider") {
+  if (args == "wdh" || args == "watchdoghider") {
     watchDogHider = !watchDogHider;
 
     ChatLib.chat(
       dripToolsPrefix +
-        "Watchdog hider is now" +
+        "Watchdog hider is now " +
         (watchDogHider ? "§a§lON!" : "§c§lOFF!")
     );
   }
-})
-  .setName("driptools")
-  .setAliases(["dt"]);
+
   if (args == "bm" || args == "bingo") {
     ChatLib.chat(
       dripToolsPrefix +
         "Current bingo message is: " +
         bingoMessage +
-        "\n§aUse /bm <message> to change it! (Max 20 words) Leave blank to disable!"
+        "\n§aUse /bm <message> to change it! (Max 20 words) Leave blank to disable! Use /bingo to send the message!"
     );
   }
-}).setName("driptools").setAliases(["dt"]);
+})
+  .setName("driptools")
+  .setAliases(["dt"]);
 
 register("command", () => {
   implosionHiderToggle = !implosionHiderToggle;
@@ -188,33 +193,85 @@ register(
       dripToolsPrefix + "Watchdog message set to: " + watchDogMessage
     );
   }
-).setName("wdm");
+)
+  .setName("wdm")
+  .setAliases(["watchdogmessage"]);
 
-register("command", (args, args2, args3, args4, args5, args6, args7, args8, args9, args10, args11, args12, args13, args14, args15, args16, args17, args18, args19, args20) => {
-  bingoMessage = "";
-  if (args == null || args == "") {
-    ChatLib.chat(dripToolsPrefix + "Bingo message §c§lDISABLED!");
-    return;
-  }
-  var arguments = [args, args2, args3, args4, args5, args6, args7, args8, args9, args10, args11, args12, args13, args14, args15, args16, args17, args18, args19, args20];
-  
-  for(i = 0; i < arguments.length; i++) {
-    if (arguments[i] == null) {
-      arguments[i] = "";
+register(
+  "command",
+  (
+    args,
+    args2,
+    args3,
+    args4,
+    args5,
+    args6,
+    args7,
+    args8,
+    args9,
+    args10,
+    args11,
+    args12,
+    args13,
+    args14,
+    args15,
+    args16,
+    args17,
+    args18,
+    args19,
+    args20
+  ) => {
+    bingoMessage = "";
+    if (args == null || args == "") {
+      ChatLib.chat(dripToolsPrefix + "Bingo message §c§lDISABLED!");
+      return;
     }
-    bingoMessage += arguments[i] + " ";
-  }
+    var arguments = [
+      args,
+      args2,
+      args3,
+      args4,
+      args5,
+      args6,
+      args7,
+      args8,
+      args9,
+      args10,
+      args11,
+      args12,
+      args13,
+      args14,
+      args15,
+      args16,
+      args17,
+      args18,
+      args19,
+      args20,
+    ];
 
-  ChatLib.chat(dripToolsPrefix + "Bingo message set to: " + bingoMessage);
-}).setName("bm").setAliases(["bingomessage"]);
+    for (i = 0; i < arguments.length; i++) {
+      if (arguments[i] == null) {
+        arguments[i] = "";
+      }
+      bingoMessage += arguments[i] + " ";
+    }
+
+    ChatLib.chat(dripToolsPrefix + "Bingo message set to: " + bingoMessage);
+  }
+)
+  .setName("bm")
+  .setAliases(["bingomessage"]);
 
 register("command", () => {
-  if (bingoMessage.isempty()) {
+  if (bingoMessage == null || bingoMessage == "" || bingoMessage == " ") {
+    ChatLib.chat(dripToolsPrefix + "§7Bingo message is §c§lDISABLED!");
     return;
   }
 
   ChatLib.command("ac " + bingoMessage);
-}).setName("bingo").setAliases(["bongo"]);
+})
+  .setName("bingo")
+  .setAliases(["bongo"]);
 
 register("chat", (event) => {
   if (
@@ -264,29 +321,30 @@ register("chat", (event) => {
   }
 });
 
-register("chat", (event) => {
-  if (!autoPVToggle) {
-    return;
-  }
-  let message = ChatLib.getChatMessage(event, true);
-  let regex =
-    /Party Finder > (.+) joined the dungeon group! \((.+) Level (\d+)\)/;
+// register("chat", (event) => {
+//   if (!autoPVToggle) {
+//     return;
+//   }
+//   let message = ChatLib.getChatMessage(event, true);
+//   let regex =
+//     /Party Finder > (.+) joined the dungeon group! \((.+) Level (\d+)\)/;
 
-  if (regex.test(message)) {
-    let matches = message.match(regex);
-    let playerName = matches[1];
-    ChatLib.command("pv " + playerName);
-  }
-});
+//   if (regex.test(message)) {
+//     let matches = message.match(regex);
+//     let playerName = matches[1];
+//     ChatLib.command("pv " + playerName);
+//   }
+// });
 
 register("chat", (event) => {
   if (!implosionHiderToggle) {
     return;
   }
-
   let message = ChatLib.getChatMessage(event, true);
+  let regex =
+    /&r&7Your Implosion hit &r&c\d+ &r&7enem(y|ies) for &r&c[\d,]+\.?\d* &r&7damage.&r/;
 
-  if (message.includes("Your Implosion hit")) {
+  if (regex.test(message)) {
     cancel(event);
   }
 });
@@ -310,6 +368,7 @@ register("chat", (event) => {
 
 register("chat", (event) => {
   if (
+    watchDogHider ||
     watchDogMessage == null ||
     watchDogMessage == "" ||
     watchDogMessage == " "
@@ -318,8 +377,8 @@ register("chat", (event) => {
   }
 
   let message = ChatLib.getChatMessage(event, true);
-  if (message.includes("[WATCHDOG ANNOUNCEMENT]")) {
-    ChatLib.command("say " + watchDogMessage);
+  if (message.includes("&4[WATCHDOG ANNOUNCEMENT]&r")) {
+    ChatLib.command("ac " + watchDogMessage);
   }
 });
 
@@ -330,14 +389,14 @@ register("chat", (event) => {
 
   let message = ChatLib.getChatMessage(event, true);
   let lineOneRegex =
-    /§fWatchdog has banned §r§c§l(\d{1,3}(,\d{3})*|\d+)§r§f players in the last 7 days.§r/;
+    /&fWatchdog has banned &r&c&l(\d{1,3}(,\d{3})*|\d+)&r&f players in the last 7 days.&r/;
   let lineTwoRegex =
-    /§fStaff have banned an additional §r§c§l(\d{1,3}(,\d{3})*|\d+)§r§f in the last 7 days.§r/;
+    /&fStaff have banned an additional &r&c&l(\d{1,3}(,\d{3})*|\d+)&r&f in the last 7 days.&r/;
   if (
-    message.includes("§4[WATCHDOG ANNOUNCEMENT]§r") ||
-    message.includes("§cBlacklisted modifications are a bannable offense!§r") ||
+    message.includes("&4[WATCHDOG ANNOUNCEMENT]&r") ||
     lineOneRegex.test(message) ||
-    lineTwoRegex.test(message)
+    lineTwoRegex.test(message) ||
+    message.includes("&cBlacklisted modifications are a bannable offense!&r")
   ) {
     cancel(event);
   }
