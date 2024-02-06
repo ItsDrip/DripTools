@@ -9,6 +9,7 @@ let implosionHiderToggle = false;
 let kickTimerToggle = false;
 let watchDogMessage = "Thanks, Watchdog!";
 let watchDogHider = false;
+let bingoMessage = "Tysm!";
 
 const usages = ["/dt vanq", "/dt pv", "/dt ih", "/dt kt"];
 
@@ -35,6 +36,10 @@ register("command", (args) => {
         vanqMode = 3;
         break;
       case 3:
+        vanqModeState = "§b§lCOOP!";
+        vanqMode = 4;
+        break;
+      case 4:
         vanqModeState = "§c§lOFF!";
         vanqMode = 0;
         break;
@@ -100,6 +105,15 @@ register("command", (args) => {
 })
   .setName("driptools")
   .setAliases(["dt"]);
+  if (args == "bm" || args == "bingo") {
+    ChatLib.chat(
+      dripToolsPrefix +
+        "Current bingo message is: " +
+        bingoMessage +
+        "\n§aUse /bm <message> to change it! (Max 20 words) Leave blank to disable!"
+    );
+  }
+}).setName("driptools").setAliases(["dt"]);
 
 register("command", () => {
   implosionHiderToggle = !implosionHiderToggle;
@@ -176,6 +190,32 @@ register(
   }
 ).setName("wdm");
 
+register("command", (args, args2, args3, args4, args5, args6, args7, args8, args9, args10, args11, args12, args13, args14, args15, args16, args17, args18, args19, args20) => {
+  bingoMessage = "";
+  if (args == null || args == "") {
+    ChatLib.chat(dripToolsPrefix + "Bingo message §c§lDISABLED!");
+    return;
+  }
+  var arguments = [args, args2, args3, args4, args5, args6, args7, args8, args9, args10, args11, args12, args13, args14, args15, args16, args17, args18, args19, args20];
+  
+  for(i = 0; i < arguments.length; i++) {
+    if (arguments[i] == null) {
+      arguments[i] = "";
+    }
+    bingoMessage += arguments[i] + " ";
+  }
+
+  ChatLib.chat(dripToolsPrefix + "Bingo message set to: " + bingoMessage);
+}).setName("bm").setAliases(["bingomessage"]);
+
+register("command", () => {
+  if (bingoMessage.isempty()) {
+    return;
+  }
+
+  ChatLib.command("ac " + bingoMessage);
+}).setName("bingo").setAliases(["bongo"]);
+
 register("chat", (event) => {
   if (
     ChatLib.getChatMessage(event, true).includes(
@@ -194,6 +234,9 @@ register("chat", (event) => {
         break;
       case 3:
         messagePrefix = "gc A Vanquisher has spawned at ";
+        break;
+      case 4:
+        messagePrefix = "cc A Vanquisher has spawned at ";
         break;
       default:
         return;
