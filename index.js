@@ -108,7 +108,7 @@ register("command", (args) => {
     );
   }
 
-  if (args == "bm" || args == "bingo") {
+  if (args == "bm" || args == "bingomessage") {
     ChatLib.chat(
       dripToolsPrefix +
         "Current bingo message is: " +
@@ -270,8 +270,7 @@ register("command", () => {
 
   ChatLib.command("ac " + bingoMessage);
 })
-  .setName("bingo")
-  .setAliases(["bongo"]);
+  .setName("bongo");
 
 register("chat", (event) => {
   if (

@@ -21,7 +21,7 @@ The module is currently under 'review', which might take a while. After that ins
 ## Features
 
 ### Vanquisher cords poster 
-`/dt vanq`
+`/dt vanq` or `/dt vanquisher`
 Automatically posts the cords of a newly spawned vanquisher and its location in chat (ALL/PARTY/GUILD/OFF); <br>
 Example: <br>
 `Party > [MVP+] ItsDirk ቾ: A Vanquisher has spawned at -417 193 -954 (Ruins of Ashfang)`
@@ -37,5 +37,13 @@ Sends the following message when kicked from SkyBlock: <br>
 
 ### Watchdog thank message
 `/dt wd` and `/wdm <message>`
-Sends a custom message in public chat whenever watchdog announces the amount of banned players (MESSAGE/OFF)
+Sends a custom message in public chat whenever watchdog announces the amount of banned players (MESSAGE/OFF) <br>
+
+### Watchdog hider
+`/dt wdh` or `/dt watchdoghider`
+Hides the "Watchdog has banned..." message (ON/OFF)
+
+### Bingo message
+`/dt bm`, `/bm <message>` and `/bongo`
+Set a custom message to thank a splasher during bingo. Set a custom message with `/bm <message>` and send that message in all chat using `/bongo` (MESSAGE/OFF) <br>
 
