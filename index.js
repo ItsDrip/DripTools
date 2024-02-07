@@ -1,9 +1,14 @@
 /// <reference types="../CTAutocomplete" />
 /// <reference lib="es2015" />
 
+import Settings from "./config";
+
+// to open the config gui use the "openGUI" function
+register("command", () => Settings.openGUI()).setName("mycommand");
+
 const dripToolsPrefix = "§5§kA§a[§bDripTools§a]§5§kA§r§a ";
 
-let vanqMode = 0;
+// let vanqMode = 0;
 // let autoPVToggle = false;
 let implosionHiderToggle = false;
 let kickTimerToggle = false;
@@ -22,26 +27,26 @@ register("command", (args) => {
 
   if (args == "vanq" || args == "vanquisher") {
     let vanqModeState;
-    switch (vanqMode) {
+    switch (Settings.vanqMode) {
       case 0:
         vanqModeState = "§f§lALL!";
-        vanqMode = 1;
+        Settings.vanqMode = 1;
         break;
       case 1:
         vanqModeState = "§9§lPARTY!";
-        vanqMode = 2;
+        Settings.vanqMode = 2;
         break;
       case 2:
         vanqModeState = "§2§lGUILD!";
-        vanqMode = 3;
+        Settings.vanqMode = 3;
         break;
       case 3:
         vanqModeState = "§b§lCOOP!";
-        vanqMode = 4;
+        Settings.vanqMode = 4;
         break;
       case 4:
         vanqModeState = "§c§lOFF!";
-        vanqMode = 0;
+        Settings.vanqMode = 0;
         break;
       default:
         return;
@@ -159,7 +164,7 @@ register(
       ChatLib.chat(dripToolsPrefix + "Watchdog message §c§lDISABLED!");
       return;
     }
-    var arguments = [
+    var argsArray = [
       args,
       args2,
       args3,
@@ -182,11 +187,11 @@ register(
       args20,
     ];
 
-    for (i = 0; i < arguments.length; i++) {
-      if (arguments[i] == null) {
-        arguments[i] = "";
+    for (i = 0; i < argsArray.length; i++) {
+      if (argsArray[i] == null) {
+        argsArray[i] = "";
       }
-      watchDogMessage += arguments[i] + " ";
+      watchDogMessage += argsArray[i] + " ";
     }
 
     ChatLib.chat(
@@ -226,7 +231,7 @@ register(
       ChatLib.chat(dripToolsPrefix + "Bingo message §c§lDISABLED!");
       return;
     }
-    var arguments = [
+    var argsArray = [
       args,
       args2,
       args3,
@@ -249,11 +254,11 @@ register(
       args20,
     ];
 
-    for (i = 0; i < arguments.length; i++) {
-      if (arguments[i] == null) {
-        arguments[i] = "";
+    for (i = 0; i < argsArray.length; i++) {
+      if (argsArray[i] == null) {
+        argsArray[i] = "";
       }
-      bingoMessage += arguments[i] + " ";
+      bingoMessage += argsArray[i] + " ";
     }
 
     ChatLib.chat(dripToolsPrefix + "Bingo message set to: " + bingoMessage);
@@ -269,8 +274,7 @@ register("command", () => {
   }
 
   ChatLib.command("ac " + bingoMessage);
-})
-  .setName("bongo");
+}).setName("bongo");
 
 register("chat", (event) => {
   if (
@@ -281,7 +285,7 @@ register("chat", (event) => {
     let messagePrefix;
     let playerLocation;
 
-    switch (vanqMode) {
+    switch (Settings.vanqMode) {
       case 1:
         messagePrefix = "ac A Vanquisher has spawned at ";
         break;
