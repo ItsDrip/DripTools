@@ -59,6 +59,30 @@ class Settings {
   })
   bingoMessage = "Tysm!";
 
+  @SwitchProperty({
+    name: "Shorten party chat",
+    description: "Shorten §9Party§r to §9P",
+    category: "Chat utilities",
+    subcategory: "Chat prefixes"
+  })
+  shortenPartyChat = false;
+
+  @SwitchProperty({
+    name: "Shorten guild chat",
+    description: "Shorten §2Guild§r to §2G",
+    category: "Chat utilities",
+    subcategory: "Chat prefixes"
+  })
+  shortenGuildChat = false;
+
+  @SwitchProperty({
+    name: "Shorten coop chat",
+    description: "Shorten §bCoop§r to §bCC",
+    category: "Chat utilities",
+    subcategory: "Chat prefixes"
+  })
+  shortenCoopChat = false;
+
   constructor() {
     this.initialize(this);
   }

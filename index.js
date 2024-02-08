@@ -131,3 +131,31 @@ register("chat", (event) => {
     cancel(event);
   }
 });
+
+register("chat", (event) => {
+  if (!Settings.shortenGuildChat){
+    return
+  }
+
+  var message = ChatLib.getChatMessage(event, true);
+  if (message.includes("&r&2Guild")){
+    cancel(event);
+    ChatLib.chat(message.replace("&r&2Guild", "&r&2G"));
+  }
+});
+
+register("chat", (event) => {
+  if (!Settings.shortenGuildChat){
+    return
+  }
+
+  var message = ChatLib.getChatMessage(event, true);
+  if (message.includes("&r&2Guild")){
+    cancel(event);
+    ChatLib.chat(message.replace("&r&2Guild", "&r&2G"));
+  }
+});
+
+register("command", () => {
+  ChatLib.chat("§r§2Guild > §7 §7ItsDirkie §2[Explo]§f: §r  SKILL LEVEL UP Social VI -> VII§r§r");
+}).setName("test");

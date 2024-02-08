@@ -9,6 +9,17 @@
 		bingo_message = "Tysm!"
 		watchdog_message = "Thanks, watchdog!"
 
+	[chat_utilities.shorten_chat_prefixes]
+		shorten_party_chat = false
+		shorten_coop_chat = false
+		"shorten_§9party§r_chat" = false
+		shorten_guild_chat = false
+
+	[chat_utilities.chat_prefixes]
+		shorten_party_chat = true
+		shorten_coop_chat = true
+		shorten_guild_chat = true
+
 [hiders]
 	implosion_hider = false
 	watchdog_hider = false
