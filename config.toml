@@ -14,6 +14,10 @@
 		shorten_co-op_chat = false
 		shorten_guild_chat = false
 
+	[chat_utilities.replacements]
+		"post_coordinates_with_[cords]" = false
+		start_message_with_caps = false
+
 [hiders]
 	implosion_hider = false
 	watchdog_hider = false
