@@ -164,3 +164,22 @@ register("chat", (event) => {
     cancel(event);
   }
 });
+
+register("messageSent", (message, event) => {
+  if (!Settings.replaceCords) {
+    return;
+  }
+
+  if (message.includes("[cords]") || message.includes("[coords]")) {
+    message = message.replace(
+      /\[(cords|coords)\]/,
+      Math.round(Player.getX()) +
+        " " +
+        Math.round(Player.getY()) +
+        " " +
+        Math.round(Player.getZ())
+    );
+    cancel(event);
+    ChatLib.say(message);
+  }
+});
