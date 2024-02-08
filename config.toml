@@ -1,16 +1,15 @@
 
 [chat_utilities]
-	vanquisher_chat = 4
-
-	[chat_utilities.stats]
-		vanquisher_chat = 3
 
 	[chat_utilities.vanquishers]
-		vanquisher_chat = 0
+		vanquisher_messages = 0
 
-[stats]
+	[chat_utilities.messages]
+		kicked_message = "I have been kicked from SkyBlock! You can warp me back in a minute!"
+		bingo_message = "Tysm!"
+		watchdog_message = "Thanks, watchdog!"
 
-	[stats.stats]
-		tick_speed_block = 3
-		vanquisher_chat = 3
+[hiders]
+	implosion_hider = false
+	watchdog_hider = false
 
