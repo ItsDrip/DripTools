@@ -160,7 +160,7 @@ register("chat", (event) => {
   }
   var message = ChatLib.getChatMessage(event, true);
   if (message.includes("&r&bCo-op")) {
-    ChatLib.chat(message.replace("&r&bCo-op", "&r&bCC"));
+    ChatLib.chat(message.replace("&r&bCo-op", "&r&bC"));
     cancel(event);
   }
 });

@@ -77,7 +77,7 @@ class Settings {
 
   @SwitchProperty({
     name: "Shorten Co-op Chat",
-    description: "Shorten §bCo-op§r to §bCC",
+    description: "Shorten §bCo-op§r to §bC",
     category: "Chat Utilities",
     subcategory: "Chat prefixes"
   })
