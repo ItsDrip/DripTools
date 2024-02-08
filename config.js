@@ -2,7 +2,7 @@ import { @Vigilant, @TextProperty, @ColorProperty, @ButtonProperty, @SwitchPrope
 
 @Vigilant("DripTools", "ItsDirk", {
   getCategoryComparator: () => (a, b) => {
-    const categories = ["Chat utilities"];
+    const categories = ["Chat Utilities"];
     return categories.indexOf(a.name) - categories.indexOf(b.name);
   },
 })
@@ -10,7 +10,7 @@ class Settings {
   @SelectorProperty({
     name: "Vanquisher Notifications",
     description: "Select a chat to send vanquisher notifications to",
-    category: "Chat utilities",
+    category: "Chat Utilities",
     subcategory: "Vanquishers",
     options: ["OFF", "ALL", "PARTY", "GUILD", "COOP"],
   })
@@ -34,7 +34,7 @@ class Settings {
     name: "Watchdog Message",
     description: "Sends a message to 'thank' watchdog. Leave empty to disable",
     placeholder: "§fEnter message...",
-    category: "Chat utilities",
+    category: "Chat Utilities",
     subcategory: "Messages",
   })
   watchDogMessage = "Thanks, watchdog!";
@@ -44,7 +44,7 @@ class Settings {
     description:
       "Sends a message in party chat when you're kicked from SkyBlock. Leave empty to disable",
     placeholder: "§fEnter message...",
-    category: "Chat utilities",
+    category: "Chat Utilities",
     subcategory: "Messages",
   })
   kickedMessage =
@@ -54,7 +54,7 @@ class Settings {
     name: "Bingo Message",
     description: "Sends a custom thank you message with /bongo",
     placeholder: "§fEnter message...",
-    category: "Chat utilities",
+    category: "Chat Utilities",
     subcategory: "Messages",
   })
   bingoMessage = "Tysm!";
@@ -62,7 +62,7 @@ class Settings {
   @SwitchProperty({
     name: "Shorten Party Chat",
     description: "Shorten §9Party§r to §9P",
-    category: "Chat utilities",
+    category: "Chat Utilities",
     subcategory: "Chat prefixes"
   })
   shortenPartyChat = false;
@@ -70,7 +70,7 @@ class Settings {
   @SwitchProperty({
     name: "Shorten Guild Chat",
     description: "Shorten §2Guild§r to §2G",
-    category: "Chat utilities",
+    category: "Chat Utilities",
     subcategory: "Chat prefixes"
   })
   shortenGuildChat = false;
@@ -78,10 +78,18 @@ class Settings {
   @SwitchProperty({
     name: "Shorten Co-op Chat",
     description: "Shorten §bCo-op§r to §bCC",
-    category: "Chat utilities",
+    category: "Chat Utilities",
     subcategory: "Chat prefixes"
   })
   shortenCoopChat = false;
+
+  @SwitchProperty({
+    name: "Post Coordinates With [cords]",
+    description: "Replaces [cords] in your message with your current coordinates",
+    category: "Chat Utilities",
+    subcategory: "Replacements"
+  })
+  replaceCords = false;
 
   constructor() {
     this.initialize(this);
