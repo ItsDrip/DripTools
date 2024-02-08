@@ -183,3 +183,19 @@ register("messageSent", (message, event) => {
     ChatLib.say(message);
   }
 });
+
+register("messageSent", (message, event) => {
+  if (!Settings.autoCaps) {
+    return;
+  }
+
+  if (message.charAt(0) === message.charAt(0).toUpperCase()){
+    return;
+  }
+
+  const capitalizedMessage = message.charAt(0).toUpperCase() + message.slice(1);
+
+  console.log(capitalizedMessage);
+  cancel(event);
+  ChatLib.say(capitalizedMessage);
+});
