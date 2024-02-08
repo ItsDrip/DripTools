@@ -1,276 +1,11 @@
 /// <reference types="../CTAutocomplete" />
 /// <reference lib="es2015" />
 
+import Settings from "./config";
+
+register("command", () => Settings.openGUI()).setName("dt", true);
+
 const dripToolsPrefix = "§5§kA§a[§bDripTools§a]§5§kA§r§a ";
-
-let vanqMode = 0;
-// let autoPVToggle = false;
-let implosionHiderToggle = false;
-let kickTimerToggle = false;
-let watchDogMessage = "Thanks, Watchdog!";
-let watchDogHider = false;
-let bingoMessage = "Tysm!";
-
-const usages = ["/dt vanq", "/dt ih", "/dt kt", "/dt wdm", "/dt wdh", "/dt bm"];
-
-register("command", (args) => {
-  if (args == null || args == "help") {
-    ChatLib.chat(dripToolsPrefix + "§7Usages: " + usages.join(", "));
-
-    return;
-  }
-
-  if (args == "vanq" || args == "vanquisher") {
-    let vanqModeState;
-    switch (vanqMode) {
-      case 0:
-        vanqModeState = "§f§lALL!";
-        vanqMode = 1;
-        break;
-      case 1:
-        vanqModeState = "§9§lPARTY!";
-        vanqMode = 2;
-        break;
-      case 2:
-        vanqModeState = "§2§lGUILD!";
-        vanqMode = 3;
-        break;
-      case 3:
-        vanqModeState = "§b§lCOOP!";
-        vanqMode = 4;
-        break;
-      case 4:
-        vanqModeState = "§c§lOFF!";
-        vanqMode = 0;
-        break;
-      default:
-        return;
-    }
-
-    ChatLib.chat(
-      dripToolsPrefix + "Vanquisher chat is set to " + vanqModeState
-    );
-
-    return;
-  }
-
-  // if (args == "pv" || args == "autopv") {
-  //   autoPVToggle = !autoPVToggle;
-
-  //   ChatLib.chat(
-  //     dripToolsPrefix +
-  //       "§aAuto PV is now " +
-  //       (autoPVToggle ? "§a§lON!" : "§c§lOFF!")
-  //   );
-  // }
-
-  if (args == "ih") {
-    implosionHiderToggle = !implosionHiderToggle;
-
-    ChatLib.chat(
-      dripToolsPrefix +
-        "Implosion hider is now " +
-        (implosionHiderToggle ? "§a§lON!" : "§c§lOFF!")
-    );
-  }
-
-  if (args == "kt" || args == "kicktimer") {
-    kickTimerToggle = !kickTimerToggle;
-
-    ChatLib.chat(
-      dripToolsPrefix +
-        "Kicked message is now " +
-        (kickTimerToggle ? "§a§lON!" : "§c§lOFF!")
-    );
-  }
-
-  if (
-    args == "wd" ||
-    args == "watchdog" ||
-    args == "wdm" ||
-    args == "watchdogmessage"
-  ) {
-    ChatLib.chat(
-      dripToolsPrefix +
-        "Current watchdog message is: " +
-        watchDogMessage +
-        "\n§aUse /wdm <message> to change it! (Max 20 words) Leave blank to disable!"
-    );
-  }
-
-  if (args == "wdh" || args == "watchdoghider") {
-    watchDogHider = !watchDogHider;
-
-    ChatLib.chat(
-      dripToolsPrefix +
-        "Watchdog hider is now " +
-        (watchDogHider ? "§a§lON!" : "§c§lOFF!")
-    );
-  }
-
-  if (args == "bm" || args == "bingomessage") {
-    ChatLib.chat(
-      dripToolsPrefix +
-        "Current bingo message is: " +
-        bingoMessage +
-        "\n§aUse /bm <message> to change it! (Max 20 words) Leave blank to disable! Use /bingo to send the message!"
-    );
-  }
-})
-  .setName("driptools")
-  .setAliases(["dt"]);
-
-register("command", () => {
-  implosionHiderToggle = !implosionHiderToggle;
-
-  ChatLib.chat(
-    dripToolsPrefix +
-      "Implosion hider is now " +
-      (implosionHiderToggle ? "§a§lON!" : "§c§lOFF!")
-  );
-}).setName("ih");
-
-register(
-  "command",
-  (
-    args,
-    args2,
-    args3,
-    args4,
-    args5,
-    args6,
-    args7,
-    args8,
-    args9,
-    args10,
-    args11,
-    args12,
-    args13,
-    args14,
-    args15,
-    args16,
-    args17,
-    args18,
-    args19,
-    args20
-  ) => {
-    watchDogMessage = "";
-    if (args == null || args == "") {
-      ChatLib.chat(dripToolsPrefix + "Watchdog message §c§lDISABLED!");
-      return;
-    }
-    var arguments = [
-      args,
-      args2,
-      args3,
-      args4,
-      args5,
-      args6,
-      args7,
-      args8,
-      args9,
-      args10,
-      args11,
-      args12,
-      args13,
-      args14,
-      args15,
-      args16,
-      args17,
-      args18,
-      args19,
-      args20,
-    ];
-
-    for (i = 0; i < arguments.length; i++) {
-      if (arguments[i] == null) {
-        arguments[i] = "";
-      }
-      watchDogMessage += arguments[i] + " ";
-    }
-
-    ChatLib.chat(
-      dripToolsPrefix + "Watchdog message set to: " + watchDogMessage
-    );
-  }
-)
-  .setName("wdm")
-  .setAliases(["watchdogmessage"]);
-
-register(
-  "command",
-  (
-    args,
-    args2,
-    args3,
-    args4,
-    args5,
-    args6,
-    args7,
-    args8,
-    args9,
-    args10,
-    args11,
-    args12,
-    args13,
-    args14,
-    args15,
-    args16,
-    args17,
-    args18,
-    args19,
-    args20
-  ) => {
-    bingoMessage = "";
-    if (args == null || args == "") {
-      ChatLib.chat(dripToolsPrefix + "Bingo message §c§lDISABLED!");
-      return;
-    }
-    var arguments = [
-      args,
-      args2,
-      args3,
-      args4,
-      args5,
-      args6,
-      args7,
-      args8,
-      args9,
-      args10,
-      args11,
-      args12,
-      args13,
-      args14,
-      args15,
-      args16,
-      args17,
-      args18,
-      args19,
-      args20,
-    ];
-
-    for (i = 0; i < arguments.length; i++) {
-      if (arguments[i] == null) {
-        arguments[i] = "";
-      }
-      bingoMessage += arguments[i] + " ";
-    }
-
-    ChatLib.chat(dripToolsPrefix + "Bingo message set to: " + bingoMessage);
-  }
-)
-  .setName("bm")
-  .setAliases(["bingomessage"]);
-
-register("command", () => {
-  if (bingoMessage == null || bingoMessage == "" || bingoMessage == " ") {
-    ChatLib.chat(dripToolsPrefix + "§7Bingo message is §c§lDISABLED!");
-    return;
-  }
-
-  ChatLib.command("ac " + bingoMessage);
-})
-  .setName("bongo");
 
 register("chat", (event) => {
   if (
@@ -281,18 +16,18 @@ register("chat", (event) => {
     let messagePrefix;
     let playerLocation;
 
-    switch (vanqMode) {
+    switch (Settings.vanquisherMode) {
       case 1:
-        messagePrefix = "ac A Vanquisher has spawned at ";
+        messagePrefix = "ac";
         break;
       case 2:
-        messagePrefix = "pc A Vanquisher has spawned at ";
+        messagePrefix = "pc";
         break;
       case 3:
-        messagePrefix = "gc A Vanquisher has spawned at ";
+        messagePrefix = "gc";
         break;
       case 4:
-        messagePrefix = "cc A Vanquisher has spawned at ";
+        messagePrefix = "cc";
         break;
       default:
         return;
@@ -308,6 +43,7 @@ register("chat", (event) => {
 
     ChatLib.command(
       messagePrefix +
+        " A Vanquisher has spawned at " +
         Math.round(Player.getX()) +
         " " +
         Math.round(Player.getY()) +
@@ -320,23 +56,8 @@ register("chat", (event) => {
   }
 });
 
-// register("chat", (event) => {
-//   if (!autoPVToggle) {
-//     return;
-//   }
-//   let message = ChatLib.getChatMessage(event, true);
-//   let regex =
-//     /Party Finder > (.+) joined the dungeon group! \((.+) Level (\d+)\)/;
-
-//   if (regex.test(message)) {
-//     let matches = message.match(regex);
-//     let playerName = matches[1];
-//     ChatLib.command("pv " + playerName);
-//   }
-// });
-
 register("chat", (event) => {
-  if (!implosionHiderToggle) {
+  if (!Settings.implosionHider) {
     return;
   }
   let message = ChatLib.getChatMessage(event, true);
@@ -349,7 +70,7 @@ register("chat", (event) => {
 });
 
 register("chat", (event) => {
-  if (!kickTimerToggle) {
+  if (Settings.kickedMessage === "") {
     return;
   }
 
@@ -359,30 +80,40 @@ register("chat", (event) => {
     message.includes("You were kicked while joining that server!") ||
     message.includes("Ye be kicked while joinin' that server!")
   ) {
-    ChatLib.command(
-      "pc I have been kicked from SkyBlock! You can warp me back in a minute!"
-    );
+    ChatLib.command("pc " + kickedMessage);
   }
 });
 
+register("command", () => {
+  if (Settings.bingoMessage == "") {
+    const clickableMessage = new Message(
+      dripToolsPrefix,
+      new TextComponent(
+        "&cYou need to set a message in settings for this command to work! Click &ehere &cto open settings."
+      )
+        .setClick("run_command", "/dt")
+        .setHoverValue("&eClick to open settings")
+    );
+
+    ChatLib.chat(clickableMessage);
+    return;
+  }
+  ChatLib.command("ac " + Settings.bingoMessage);
+}).setName("bongo");
+
 register("chat", (event) => {
-  if (
-    watchDogHider ||
-    watchDogMessage == null ||
-    watchDogMessage == "" ||
-    watchDogMessage == " "
-  ) {
+  if (Settings.watchDogHider) {
     return;
   }
 
   let message = ChatLib.getChatMessage(event, true);
   if (message.includes("&4[WATCHDOG ANNOUNCEMENT]&r")) {
-    ChatLib.command("ac " + watchDogMessage);
+    ChatLib.command("ac " + Settings.watchDogMessage);
   }
 });
 
 register("chat", (event) => {
-  if (!watchDogHider) {
+  if (!Settings.watchDogHider) {
     return;
   }
 
@@ -397,6 +128,39 @@ register("chat", (event) => {
     lineTwoRegex.test(message) ||
     message.includes("&cBlacklisted modifications are a bannable offense!&r")
   ) {
+    cancel(event);
+  }
+});
+
+register("chat", (event) => {
+  if (!Settings.shortenPartyChat) {
+    return;
+  }
+  var message = ChatLib.getChatMessage(event, true);
+  if (message.includes("&r&9Party")) {
+    ChatLib.chat(message.replace("&r&9Party", "&r&9P"));
+    cancel(event);
+  }
+});
+
+register("chat", (event) => {
+  if (!Settings.shortenGuildChat) {
+    return;
+  }
+  var message = ChatLib.getChatMessage(event, true);
+  if (message.includes("&r&2Guild")) {
+    ChatLib.chat(message.replace("&r&2Guild", "&r&2G"));
+    cancel(event);
+  }
+});
+
+register("chat", (event) => {
+  if (!Settings.shortenCoopChat) {
+    return;
+  }
+  var message = ChatLib.getChatMessage(event, true);
+  if (message.includes("&r&bCo-op")) {
+    ChatLib.chat(message.replace("&r&bCo-op", "&r&bCC"));
     cancel(event);
   }
 });

@@ -1,0 +1,20 @@
+
+[chat_utilities]
+
+	[chat_utilities.vanquishers]
+		vanquisher_notifications = 0
+
+	[chat_utilities.messages]
+		kicked_message = "I have been kicked from SkyBlock! You can warp me back in a minute!"
+		bingo_message = "Tysm!"
+		watchdog_message = "Thanks, watchdog!"
+
+	[chat_utilities.chat_prefixes]
+		shorten_party_chat = false
+		shorten_co-op_chat = false
+		shorten_guild_chat = false
+
+[hiders]
+	implosion_hider = false
+	watchdog_hider = false
+
