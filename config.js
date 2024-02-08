@@ -91,6 +91,14 @@ class Settings {
   })
   replaceCords = false;
 
+  @SwitchProperty({
+    name: "Start Message With Caps",
+    description: "Replaces the first character of your message with a capital letter",
+    category: "Chat Utilities",
+    subcategory: "Replacements"
+  })
+  autoCaps = false;
+
   constructor() {
     this.initialize(this);
   }
