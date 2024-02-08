@@ -3,7 +3,7 @@
 
 import Settings from "./config";
 
-register("command", () => Settings.openGUI()).setName("dt");
+register("command", () => Settings.openGUI()).setName("dt", true);
 
 const dripToolsPrefix = "§5§kA§a[§bDripTools§a]§5§kA§r§a ";
 
@@ -56,21 +56,6 @@ register("chat", (event) => {
   }
 });
 
-// register("chat", (event) => {
-//   if (!autoPVToggle) {
-//     return;
-//   }
-//   let message = ChatLib.getChatMessage(event, true);
-//   let regex =
-//     /Party Finder > (.+) joined the dungeon group! \((.+) Level (\d+)\)/;
-
-//   if (regex.test(message)) {
-//     let matches = message.match(regex);
-//     let playerName = matches[1];
-//     ChatLib.command("pv " + playerName);
-//   }
-// });
-
 register("chat", (event) => {
   if (!Settings.implosionHider) {
     return;
@@ -95,11 +80,26 @@ register("chat", (event) => {
     message.includes("You were kicked while joining that server!") ||
     message.includes("Ye be kicked while joinin' that server!")
   ) {
-    ChatLib.command(
-      "pc " + kickedMessage
-    );
+    ChatLib.command("pc " + kickedMessage);
   }
 });
+
+register("command", () => {
+  if (Settings.bingoMessage == "") {
+    const clickableMessage = new Message(
+      dripToolsPrefix,
+      new TextComponent(
+        "&cYou need to set a message in settings for this command to work! Click &ehere &cto open settings."
+      )
+        .setClick("run_command", "/dt")
+        .setHoverValue("&eClick to open settings")
+    );
+
+    ChatLib.chat(clickableMessage);
+    return;
+  }
+  ChatLib.command("ac " + Settings.bingoMessage);
+}).setName("bongo");
 
 register("chat", (event) => {
   if (Settings.watchDogHider) {
@@ -133,29 +133,34 @@ register("chat", (event) => {
 });
 
 register("chat", (event) => {
-  if (!Settings.shortenGuildChat){
-    return
+  if (!Settings.shortenPartyChat) {
+    return;
   }
-
   var message = ChatLib.getChatMessage(event, true);
-  if (message.includes("&r&2Guild")){
+  if (message.includes("&r&9Party")) {
+    ChatLib.chat(message.replace("&r&9Party", "&r&9P"));
     cancel(event);
-    ChatLib.chat(message.replace("&r&2Guild", "&r&2G"));
   }
 });
 
 register("chat", (event) => {
-  if (!Settings.shortenGuildChat){
-    return
+  if (!Settings.shortenGuildChat) {
+    return;
   }
-
   var message = ChatLib.getChatMessage(event, true);
-  if (message.includes("&r&2Guild")){
-    cancel(event);
+  if (message.includes("&r&2Guild")) {
     ChatLib.chat(message.replace("&r&2Guild", "&r&2G"));
+    cancel(event);
   }
 });
 
-register("command", () => {
-  ChatLib.chat("§r§2Guild > §7 §7ItsDirkie §2[Explo]§f: §r  SKILL LEVEL UP Social VI -> VII§r§r");
-}).setName("test");
+register("chat", (event) => {
+  if (!Settings.shortenCoopChat) {
+    return;
+  }
+  var message = ChatLib.getChatMessage(event, true);
+  if (message.includes("&r&bCo-op")) {
+    ChatLib.chat(message.replace("&r&bCo-op", "&r&bCC"));
+    cancel(event);
+  }
+});

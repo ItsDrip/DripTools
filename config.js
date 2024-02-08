@@ -8,8 +8,8 @@ import { @Vigilant, @TextProperty, @ColorProperty, @ButtonProperty, @SwitchPrope
 })
 class Settings {
   @SelectorProperty({
-    name: "Vanquisher messages",
-    description: "Select a chat to send vanquisher messages to",
+    name: "Vanquisher Notifications",
+    description: "Select a chat to send vanquisher notifications to",
     category: "Chat utilities",
     subcategory: "Vanquishers",
     options: ["OFF", "ALL", "PARTY", "GUILD", "COOP"],
@@ -24,26 +24,26 @@ class Settings {
   implosionHider = false;
 
   @SwitchProperty({
-    name: "Watchdog hider",
+    name: "Watchdog Hider",
     description: "Hides watchdog messages",
     category: "Hiders",
   })
   watchDogHider = false;
 
   @TextProperty({
-    name: "Watchdog message",
+    name: "Watchdog Message",
     description: "Sends a message to 'thank' watchdog. Leave empty to disable",
-    placeholder: "Enter message...",
+    placeholder: "§fEnter message...",
     category: "Chat utilities",
     subcategory: "Messages",
   })
   watchDogMessage = "Thanks, watchdog!";
 
   @TextProperty({
-    name: "Kicked message",
+    name: "Kicked Message",
     description:
       "Sends a message in party chat when you're kicked from SkyBlock. Leave empty to disable",
-    placeholder: "Enter message...",
+    placeholder: "§fEnter message...",
     category: "Chat utilities",
     subcategory: "Messages",
   })
@@ -51,16 +51,16 @@ class Settings {
     "I have been kicked from SkyBlock! You can warp me back in a minute!";
 
   @TextProperty({
-    name: "Bingo message",
+    name: "Bingo Message",
     description: "Sends a custom thank you message with /bongo",
-    placeholder: "Enter message...",
+    placeholder: "§fEnter message...",
     category: "Chat utilities",
     subcategory: "Messages",
   })
   bingoMessage = "Tysm!";
 
   @SwitchProperty({
-    name: "Shorten party chat",
+    name: "Shorten Party Chat",
     description: "Shorten §9Party§r to §9P",
     category: "Chat utilities",
     subcategory: "Chat prefixes"
@@ -68,7 +68,7 @@ class Settings {
   shortenPartyChat = false;
 
   @SwitchProperty({
-    name: "Shorten guild chat",
+    name: "Shorten Guild Chat",
     description: "Shorten §2Guild§r to §2G",
     category: "Chat utilities",
     subcategory: "Chat prefixes"
@@ -76,8 +76,8 @@ class Settings {
   shortenGuildChat = false;
 
   @SwitchProperty({
-    name: "Shorten coop chat",
-    description: "Shorten §bCoop§r to §bCC",
+    name: "Shorten Co-op Chat",
+    description: "Shorten §bCo-op§r to §bCC",
     category: "Chat utilities",
     subcategory: "Chat prefixes"
   })
