@@ -195,3 +195,17 @@ register("messageSent", (message, event) => {
   cancel(event);
   ChatLib.say(capitalizedMessage);
 });
+
+register("chat", (event) => {
+  if (!Settings.witchMaskHider) {
+    return;
+  }
+
+  let message = ChatLib.getChatMessage(event, true);
+  let regex =
+    /&r&7Your Bat Swarm hit &r&c(\d+) &r&7enem(y|ies) for &r&c(\d{1,3}(,\d{3})*(\.\d+)?) &r&7damage.&r/;
+
+  if (regex.test(message)){
+    cancel(event);
+  }
+});

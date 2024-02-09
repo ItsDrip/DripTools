@@ -24,6 +24,13 @@ class Settings {
   implosionHider = false;
 
   @SwitchProperty({
+    name: "Witch Mask Hider",
+    description: "Hides the damage messages whenever a bat hits an enemy",
+    category: "Hiders"
+  })
+  witchMaskHider = false;
+
+  @SwitchProperty({
     name: "Watchdog Hider",
     description: "Hides watchdog messages",
     category: "Hiders",
