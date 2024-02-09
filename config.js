@@ -1,9 +1,18 @@
+// prettier-ignore
 import { @Vigilant, @TextProperty, @ColorProperty, @ButtonProperty, @SwitchProperty, Color, @CheckboxProperty, @SelectorProperty } from 'Vigilance';
 
-@Vigilant("DripTools", "ItsDirk", {
+@Vigilant("DripTools", "Settings", {
   getCategoryComparator: () => (a, b) => {
-    const categories = ["Chat Utilities"];
+    const categories = ["Chat Utilities", "Hiders"];
     return categories.indexOf(a.name) - categories.indexOf(b.name);
+  },
+  getSubcategoryComparator: () => (a, b) => {
+    const subcategories = ["Vanquishers", "Replacements", "Chat prefixes", "Messages"];
+
+    return (
+      subcategories.indexOf(a.getValue()[0].attributesExt.subcategory) -
+      subcategories.indexOf(b.getValue()[0].attributesExt.subcategory)
+    );
   },
 })
 class Settings {
@@ -18,7 +27,7 @@ class Settings {
 
   @SwitchProperty({
     name: "Implosion Hider",
-    description: "Hides implosion messages",
+    description: "Hides implosion messages, can also be toggled with §b/ih§r. \n§a§lPro tip: §r§7Use Skytils to bind a keyboard key to §b/ih§r to quickly toggle it!",
     category: "Hiders",
   })
   implosionHider = false;
@@ -26,13 +35,13 @@ class Settings {
   @SwitchProperty({
     name: "Witch Mask Hider",
     description: "Hides the damage messages whenever a bat hits an enemy",
-    category: "Hiders"
+    category: "Hiders",
   })
   witchMaskHider = false;
 
   @SwitchProperty({
     name: "Watchdog Hider",
-    description: "Hides watchdog messages",
+    description: "Hides watchdog messages. §6§lNote: §r§7this will make it so that the §oWatchdog Message§r is not sent.",
     category: "Hiders",
   })
   watchDogHider = false;
@@ -40,7 +49,7 @@ class Settings {
   @TextProperty({
     name: "Watchdog Message",
     description: "Sends a message to 'thank' watchdog. Leave empty to disable",
-    placeholder: "§fEnter message...",
+    placeholder: "§cDisabled...",
     category: "Chat Utilities",
     subcategory: "Messages",
   })
@@ -50,7 +59,7 @@ class Settings {
     name: "Kicked Message",
     description:
       "Sends a message in party chat when you're kicked from SkyBlock. Leave empty to disable",
-    placeholder: "§fEnter message...",
+    placeholder: "§cDisabled...",
     category: "Chat Utilities",
     subcategory: "Messages",
   })
@@ -60,7 +69,7 @@ class Settings {
   @TextProperty({
     name: "Bingo Message",
     description: "Sends a custom thank you message with /bongo",
-    placeholder: "§fEnter message...",
+    placeholder: "§cDisabled...",
     category: "Chat Utilities",
     subcategory: "Messages",
   })
@@ -70,7 +79,7 @@ class Settings {
     name: "Shorten Party Chat",
     description: "Shorten §9Party§r to §9P",
     category: "Chat Utilities",
-    subcategory: "Chat prefixes"
+    subcategory: "Chat prefixes",
   })
   shortenPartyChat = false;
 
@@ -78,7 +87,7 @@ class Settings {
     name: "Shorten Guild Chat",
     description: "Shorten §2Guild§r to §2G",
     category: "Chat Utilities",
-    subcategory: "Chat prefixes"
+    subcategory: "Chat prefixes",
   })
   shortenGuildChat = false;
 
@@ -86,23 +95,25 @@ class Settings {
     name: "Shorten Co-op Chat",
     description: "Shorten §bCo-op§r to §bC",
     category: "Chat Utilities",
-    subcategory: "Chat prefixes"
+    subcategory: "Chat prefixes",
   })
   shortenCoopChat = false;
 
   @SwitchProperty({
     name: "Post Coordinates With [cords]",
-    description: "Replaces [cords] in your message with your current coordinates",
+    description:
+      "Replaces [cords] in your message with your current coordinates",
     category: "Chat Utilities",
-    subcategory: "Replacements"
+    subcategory: "Replacements",
   })
   replaceCords = false;
 
   @SwitchProperty({
     name: "Start Message With Caps",
-    description: "Replaces the first character of your message with a capital letter",
+    description:
+      "Replaces the first character of your message with a capital letter",
     category: "Chat Utilities",
-    subcategory: "Replacements"
+    subcategory: "Replacements",
   })
   autoCaps = false;
 

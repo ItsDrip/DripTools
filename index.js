@@ -69,6 +69,15 @@ register("chat", (event) => {
   }
 });
 
+register("command", () => {
+  Settings.implosionHider = !Settings.implosionHider;
+  ChatLib.chat(
+    dripToolsPrefix +
+      "§7Implosion hider is now " +
+      (Settings.implosionHider ? "§a§lON!" : "§c§lOFF!")
+  );
+}).setName("ih");
+
 register("chat", (event) => {
   if (Settings.kickedMessage === "") {
     return;
@@ -205,7 +214,7 @@ register("chat", (event) => {
   let regex =
     /&r&7Your Bat Swarm hit &r&c(\d+) &r&7enem(y|ies) for &r&c(\d{1,3}(,\d{3})*(\.\d+)?) &r&7damage.&r/;
 
-  if (regex.test(message)){
+  if (regex.test(message)) {
     cancel(event);
   }
 });
