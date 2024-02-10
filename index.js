@@ -8,30 +8,20 @@ register("command", () => Settings.openGUI()).setName("dt", true);
 const dripToolsPrefix = "§5§kA§a[§bDripTools§a]§5§kA§r§a ";
 
 register("chat", (event) => {
+  if (Settings.vanquisherMode === 0) {
+    return;
+  }
+
   if (
     ChatLib.getChatMessage(event, true).includes(
       "&r&aA &r&cVanquisher &r&ais spawning nearby!&r"
     )
   ) {
-    let messagePrefix;
+    let messageChat;
     let playerLocation;
 
-    switch (Settings.vanquisherMode) {
-      case 1:
-        messagePrefix = "ac";
-        break;
-      case 2:
-        messagePrefix = "pc";
-        break;
-      case 3:
-        messagePrefix = "gc";
-        break;
-      case 4:
-        messagePrefix = "cc";
-        break;
-      default:
-        return;
-    }
+    let availableChats = ["ac", "pc", "gc", "cc"];
+    messageChat = availableChats[Settings.vanquisherMode - 1];
 
     for (i = 0; i < Scoreboard.getLines().length; i++) {
       let scoreBoardLine = String(Scoreboard.getLineByIndex(i));
@@ -41,18 +31,13 @@ register("chat", (event) => {
       }
     }
 
-    ChatLib.command(
-      messagePrefix +
-        " A Vanquisher has spawned at " +
-        Math.round(Player.getX()) +
-        " " +
-        Math.round(Player.getY()) +
-        " " +
-        Math.round(Player.getZ()) +
-        " (" +
-        playerLocation +
-        ")"
-    );
+    let message = Settings.vanquisherMessageTemplate
+      .replace("[x]", Math.round(Player.getX()))
+      .replace("[y]", Math.round(Player.getY()))
+      .replace("[z]", Math.round(Player.getZ()))
+      .replace("[loc]", playerLocation);
+
+    ChatLib.command(messageChat + " " + message);
   }
 });
 

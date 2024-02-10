@@ -25,6 +25,15 @@ class Settings {
   })
   vanquisherMode = 0;
 
+  @TextProperty({
+    name: "Customize Vanquisher Message",
+    description: "Use [x], [y], [z], and [loc] to replace coordinates and location",
+    placeholder: "Write your own message here...",
+    category: "Chat Utilities",
+    subcategory: "Vanquishers",
+  })
+  vanquisherMessageTemplate = "A Vanquisher has spawned at [x] [y] [z] ([loc])";
+
   @SwitchProperty({
     name: "Implosion Hider",
     description: "Hides implosion messages, can also be toggled with §b/ih§r. \n§a§lPro tip: §r§7Use Skytils to bind a keyboard key to §b/ih§r to quickly toggle it!",
