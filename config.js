@@ -3,7 +3,7 @@ import { @Vigilant, @TextProperty, @ColorProperty, @ButtonProperty, @SwitchPrope
 
 @Vigilant("DripTools", "Settings", {
   getCategoryComparator: () => (a, b) => {
-    const categories = ["Chat Utilities", "Hiders"];
+    const categories = ["Chat Utilities", "Hiders", "Kuudra"];
     return categories.indexOf(a.name) - categories.indexOf(b.name);
   },
   getSubcategoryComparator: () => (a, b) => {
@@ -116,6 +116,17 @@ class Settings {
     subcategory: "Replacements",
   })
   autoCaps = false;
+
+  @SwitchProperty({
+    name: "Dropship Warning",
+    description:
+      "Gives a warning when a dropship is about to drop it's bomb",
+    category: "Kuudra",
+    subcategory: "Dropship",
+  })
+  dropshipWarning = false;
+
+
 
   constructor() {
     this.initialize(this);

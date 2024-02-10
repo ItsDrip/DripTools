@@ -218,3 +218,28 @@ register("chat", (event) => {
     cancel(event);
   }
 });
+
+register("command", () => {
+  if (!Settings.dropshipWarning) {
+    return;
+  }
+  let kuudraTier = 0;
+
+  for (i = 0; i < Scoreboard.getLines().length; i++) {
+    let scoreBoardLine = String(Scoreboard.getLineByIndex(i));
+    let playerLocation;
+
+    if (scoreBoardLine.includes("⏣")) {
+      playerLocation = scoreBoardLine.replace(/§./g, "").replace(/ ⏣ /g, "");
+
+      if (playerLocation.includes("Kuudra's 🍭Hollow")) {
+        let match = playerLocation.match(/Kuudra's 🍭Hollow \(T(\d+)\)/);
+        kuudraTier = match ? match[1] : 0;
+        ChatLib.chat("You are in kuudra tier " + kuudraTier);
+        break;
+      } else {
+        ChatLib.chat("You are not in kuudra's hollow");
+      }
+    }
+  }
+}).setName("test");
