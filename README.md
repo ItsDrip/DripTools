@@ -20,30 +20,7 @@ The module is currently under 'review', which might take a while. After that ins
 
 ## Features
 
-### Vanquisher cords poster 
-`/dt vanq` or `/dt vanquisher`
-Automatically posts the cords of a newly spawned vanquisher and its location in chat (ALL/PARTY/GUILD/OFF); <br>
-Example: <br>
-`Party > [MVP+] ItsDirk ቾ: A Vanquisher has spawned at -417 193 -954 (Ruins of Ashfang)`
+Version 0.1.4 - Vigilance is here! That means data persistence and a nice GUI.
 
-### Implosion hider
-`/dt ih` or `/ih`
-Implosion hider won't show the implosion message (ON/OFF). Pro tip: bind this to a key on your keyboard using SkyTils to quickly switch!<br>
-
-### Kicked from SkyBlock message
-`/dt kt`
-Sends the following message when kicked from SkyBlock: <br>
-`Party > [MVP+] ItsDirk: I have been kicked from SkyBlock! You can warp me back in a minute!`
-
-### Watchdog thank message
-`/dt wd` and `/wdm <message>`
-Sends a custom message in public chat whenever watchdog announces the amount of banned players (MESSAGE/OFF) <br>
-
-### Watchdog hider
-`/dt wdh` or `/dt watchdoghider`
-Hides the "Watchdog has banned..." message (ON/OFF)
-
-### Bingo message
-`/dt bm`, `/bm <message>` and `/bongo`
-Set a custom message to thank a splasher during bingo. Set a custom message with `/bm <message>` and send that message in all chat using `/bongo` (MESSAGE/OFF) <br>
+`/dt` to open the GUI, all are explained and toggled there.
 
