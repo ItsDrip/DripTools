@@ -218,3 +218,39 @@ register("chat", (event) => {
     cancel(event);
   }
 });
+
+
+register("command", (args) => {
+  if (args == null) {
+    ChatLib.chat(
+      dripToolsPrefix + "&cPlease provide a player name or substring"
+    );
+    return;
+  }
+
+  let entityFound = false;
+  World.getAllEntities().forEach((entity) => {
+    // if (entity.getClassName() === "EntityOtherPlayerMP") {
+    if (entity.getName().toLowerCase().includes(args.toLowerCase())) {
+      ChatLib.chat(
+        dripToolsPrefix +
+          "&fFound &d" +
+          entity.getName() +
+          "&f at &6" +
+          Math.round(entity.getLastX()) +
+          " " +
+          Math.round(entity.getLastY()) +
+          " " +
+          Math.round(entity.getLastZ())
+      );
+      entityFound = true;
+      return;
+    }
+    // }
+  });
+
+  if (!entityFound)
+    ChatLib.chat(dripToolsPrefix + '&cCould not find "&d' + args + '&c"');
+})
+  .setName("findplayer")
+  .setAliases(["fp", "find"]);
