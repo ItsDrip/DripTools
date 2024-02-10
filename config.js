@@ -3,7 +3,7 @@ import { @Vigilant, @TextProperty, @ColorProperty, @ButtonProperty, @SwitchPrope
 
 @Vigilant("DripTools", "Settings", {
   getCategoryComparator: () => (a, b) => {
-    const categories = ["Chat Utilities", "Hiders"];
+    const categories = ["Chat Utilities", "Hiders", "Other"];
     return categories.indexOf(a.name) - categories.indexOf(b.name);
   },
   getSubcategoryComparator: () => (a, b) => {
@@ -116,6 +116,32 @@ class Settings {
     subcategory: "Replacements",
   })
   autoCaps = false;
+
+  @SwitchProperty({
+    name: "Flare Timer",
+    description:
+      "Puts up a timer for when the flare will expire",
+    category: "Other",
+    subcategory: "Flare Timer",
+  })
+  flareTimer = false;
+
+  @SelectorProperty({
+    name: "Flare Timer Decimals",
+    description: "Select the amount of decimals displayed on the flare timer",
+    category: "Other",
+    subcategory: "Flare Timer",
+    options: ["No Decimals", "One Decimal", "Two Decimals"],
+  })
+  flareTimerDecimals = 0;
+
+  @ColorProperty({
+    name: "Flare Timer Color",
+    description: "Select a color for the flare timer to be displayed in",
+    category: "Other",
+    subcategory: "Flare Timer",
+  })
+  flareTimerColour = Color.BLUE;
 
   constructor() {
     this.initialize(this);

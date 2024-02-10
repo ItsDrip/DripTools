@@ -218,3 +218,47 @@ register("chat", (event) => {
     cancel(event);
   }
 });
+
+let flareTicksRemaining = 0;
+
+register("playerInteract", (event) => {
+  if (!Settings.flareTimer) {
+    return;
+  }
+  const itemNBT = Player.getHeldItem().getRawNBT();
+  if (
+    itemNBT.includes("WARNING_FLARE") ||
+    itemNBT.includes("ALERT_FLARE") ||
+    itemNBT.includes("SOS_FLARE")
+  ) {
+    flareTicksRemaining = 180 * 20; // 180 seconds * 20 ticks per second
+  }
+});
+
+register("tick", () => {
+  if (flareTicksRemaining > 0) {
+    flareTicksRemaining--;
+  }
+});
+
+register("renderOverlay", flareOverlay);
+
+function flareOverlay() {
+  if (flareTicksRemaining <= 0) {
+    return;
+  }
+  const text = new Text(
+    "Flare: " +
+      (flareTicksRemaining / 20).toFixed(Settings.flareTimerDecimals) +
+      "s",
+    20,
+    20
+  );
+  text.setColor(Renderer.getRainbow(flareTicksRemaining, 10));
+  text.setShadow(true);
+  // text.setColor(Renderer.color(Settings.flareTimerColour[0], Settings.flareTimerColour[1], Settings.flareTimerColour[2], Settings.flareTimerColour[3]));
+  text.draw();
+
+  //todo Add option to change position of text
+  //todo Add color picker for text
+}
