@@ -7,7 +7,7 @@ import { @Vigilant, @TextProperty, @ColorProperty, @ButtonProperty, @SwitchPrope
     return categories.indexOf(a.name) - categories.indexOf(b.name);
   },
   getSubcategoryComparator: () => (a, b) => {
-    const subcategories = ["Vanquishers", "Replacements", "Chat prefixes", "Messages"];
+    const subcategories = ["Vanquishers", "Replacements", "Auto Caps", "Chat prefixes", "Messages"];
 
     return (
       subcategories.indexOf(a.getValue()[0].attributesExt.subcategory) -
@@ -122,9 +122,19 @@ class Settings {
     description:
       "Replaces the first character of your message with a capital letter",
     category: "Chat Utilities",
-    subcategory: "Replacements",
+    subcategory: "Auto Caps",
   })
   autoCaps = false;
+
+  @SwitchProperty({
+    name: "Ignore Single Character Messages",
+    description:
+      "Doesn't capitalize messages that are only a single character long",
+    category: "Chat Utilities",
+    subcategory: "Auto Caps",
+  })
+  autoCapsIgnoreSingleChar = false;
+  
 
   constructor() {
     this.initialize(this);
