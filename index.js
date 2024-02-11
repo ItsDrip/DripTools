@@ -185,6 +185,11 @@ register("messageSent", (message, event) => {
   ) {
     return;
   }
+
+  if (Settings.autoCapsIgnoreSingleChar && message.length === 1) {
+    return;
+  }
+  
   const capitalizedMessage = message.charAt(0).toUpperCase() + message.slice(1);
   cancel(event);
   ChatLib.say(capitalizedMessage);
