@@ -221,8 +221,11 @@ register("chat", (event) => {
 
 let flareTicksRemaining = 0;
 
-register("playerInteract", (event) => {
-  if (!Settings.flareTimer) {
+register("playerInteract", () => {
+  if (
+    !Settings.flareTimer ||
+    flareTicksRemaining >= (180 - 20) * 20 // 180 seconds - 20 seconds because of cooldown
+  ) {
     return;
   }
   const itemNBT = Player.getHeldItem().getRawNBT();
@@ -241,9 +244,26 @@ register("tick", () => {
   }
 });
 
-register("renderOverlay", flareOverlay);
+register("chat", (event) => {
+  if (!Settings.flareTimer) {
+    return;
+  }
+  let message = ChatLib.getChatMessage(event, true);
 
-function flareOverlay() {
+  if (
+    message.includes(
+      "&r&eYour flare disappeared because you were too far away!&r"
+    )
+  ) {
+    flareTicksRemaining = 0;
+  }
+});
+
+register("worldUnload", () => {
+  flareTicksRemaining = 0;
+});
+
+register("renderOverlay", () => {
   if (flareTicksRemaining <= 0) {
     return;
   }
@@ -254,11 +274,29 @@ function flareOverlay() {
     20,
     20
   );
-  text.setColor(Renderer.getRainbow(flareTicksRemaining, 10));
+  const colors = [
+    Renderer.getRainbow(flareTicksRemaining, 200/Settings.flareTimerRainbowSpeed),
+    Renderer.DARK_RED,
+    Renderer.RED,
+    Renderer.GOLD,
+    Renderer.YELLOW,
+    Renderer.DARK_GREEN,
+    Renderer.GREEN,
+    Renderer.AQUA,
+    Renderer.DARK_AQUA,
+    Renderer.DARK_BLUE,
+    Renderer.BLUE,
+    Renderer.LIGHT_PURPLE,
+    Renderer.DARK_PURPLE,
+    Renderer.WHITE,
+    Renderer.GRAY,
+    Renderer.DARK_GRAY,
+    Renderer.BLACK,
+  ];
+
+  text.setColor(colors[Settings.flareTimerColour]);
   text.setShadow(true);
-  // text.setColor(Renderer.color(Settings.flareTimerColour[0], Settings.flareTimerColour[1], Settings.flareTimerColour[2], Settings.flareTimerColour[3]));
   text.draw();
 
   //todo Add option to change position of text
-  //todo Add color picker for text
-}
+});

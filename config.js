@@ -1,5 +1,5 @@
 // prettier-ignore
-import { @Vigilant, @TextProperty, @ColorProperty, @ButtonProperty, @SwitchProperty, Color, @CheckboxProperty, @SelectorProperty } from 'Vigilance';
+import { @Vigilant, @TextProperty, @ColorProperty, @ButtonProperty, @SwitchProperty, Color, @CheckboxProperty, @SelectorProperty, @SliderProperty } from 'Vigilance';
 
 @Vigilant("DripTools", "Settings", {
   getCategoryComparator: () => (a, b) => {
@@ -126,22 +126,34 @@ class Settings {
   })
   flareTimer = false;
 
-  @SelectorProperty({
+  @SliderProperty({
     name: "Flare Timer Decimals",
     description: "Select the amount of decimals displayed on the flare timer",
     category: "Other",
     subcategory: "Flare Timer",
-    options: ["No Decimals", "One Decimal", "Two Decimals"],
+    min: 0,
+    max: 2,
   })
   flareTimerDecimals = 0;
 
-  @ColorProperty({
+  @SelectorProperty({
     name: "Flare Timer Color",
     description: "Select a color for the flare timer to be displayed in",
     category: "Other",
     subcategory: "Flare Timer",
+    options: ["§zRainbow", "§4Dark Red", "§cRed", "§6Gold", "§eYellow", "§2Dark Green", "§aGreen", "§bAqua", "§3Dark Aqua", "§1Dark Blue", "§9Blue", "§dLight Purple", "§5Dark Purple", "§fWhite", "§7Gray", "§8Dark Gray", "§0Black"]
   })
-  flareTimerColour = Color.BLUE;
+  flareTimerColour = 0;
+
+  @SliderProperty({
+    name: "Rainbow Speed",
+    description: "Select the speed of the rainbow effect",
+    category: "Other",
+    subcategory: "Flare Timer",
+    min: 1,
+    max: 50,
+  })
+  flareTimerRainbowSpeed = 10;
 
   constructor() {
     this.initialize(this);
