@@ -134,6 +134,13 @@ class Settings {
     subcategory: "Auto Caps",
   })
   autoCapsIgnoreSingleChar = false;
+
+  @SwitchProperty({
+    name: "Profile Id Hider",
+    description: "Hides the \"§8Profile id:§r\"-message when switching lobbies",
+    category: "Hiders",
+  })
+  profileIdHider = false;
   
 
   constructor() {

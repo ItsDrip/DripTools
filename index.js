@@ -189,7 +189,7 @@ register("messageSent", (message, event) => {
   if (Settings.autoCapsIgnoreSingleChar && message.length === 1) {
     return;
   }
-  
+
   const capitalizedMessage = message.charAt(0).toUpperCase() + message.slice(1);
   cancel(event);
   ChatLib.say(capitalizedMessage);
@@ -205,6 +205,16 @@ register("chat", (event) => {
     /&r&7Your Bat Swarm hit &r&c(\d+) &r&7enem(y|ies) for &r&c(\d{1,3}(,\d{3})*(\.\d+)?) &r&7damage.&r/;
 
   if (regex.test(message)) {
+    cancel(event);
+  }
+});
+
+register("chat", (event) => {
+  if (!Settings.profileIdHider) {
+    return;
+  }
+  let message = ChatLib.getChatMessage(event, true);
+  if (message.includes("&r&8Profile ID: ")) {
     cancel(event);
   }
 });
