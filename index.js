@@ -257,29 +257,79 @@ register("chat", (event) => {
 //   }
 // });
 
+var skillExpMapping = [
+  [60, 111672425],
+  [61, 119072425],
+  [62, 126872425],
+  [63, 135072425],
+  [64, 143672425],
+  [65, 152672425],
+  [66, 162072425],
+  [67, 171872425],
+  [68, 182072425],
+  [69, 192672425],
+  [70, 203672425],
+  [71, 215172425],
+  [72, 227172425],
+  [73, 239672425],
+  [74, 252672425],
+  [75, 266172425],
+  [76, 280172425],
+  [77, 294672425],
+  [78, 309672425],
+  [79, 325172425],
+  [80, 341172425],
+  [81, 357772425],
+  [82, 374972425],
+  [83, 392772425],
+  [84, 411172425],
+  [85, 430172425],
+  [86, 449772425],
+  [87, 469972425],
+  [88, 490772425],
+  [89, 512172425],
+  [90, 534172425],
+  [91, 556872425],
+  [92, 580272425],
+  [93, 604372425],
+  [94, 629172425],
+  [95, 654672425],
+  [96, 680872425],
+  [97, 707772425],
+  [98, 735372425],
+  [99, 763672425],
+  [100, 792672425]
+];
+
+
 register("itemTooltip", (lore, item, event) => {
   if (Player.getContainer().getName() !== "Your Skills") {
     return;
   }
 
-  console.log(item.getName());
-
   let itemName = item.getName();
   let romanRegex = /(I|V|X|L)+/;
-  let oldSkillLevel = 0;
+
+  let loreString = lore.toLocaleString().replace(/,/g, "");
+
+  let match = loreString.match(/§r §6(\d+)/);
+  let expNumber = (match ? match[1] : null);
+
+  // ChatLib.chat(expNumber ? expNumber : "No match");
 
   if (itemName.match(romanRegex)) {
-    let oldSkillLevel = romanToNumber(itemName.match(romanRegex)[0]);
-    // item.setName(item.getName().replace(romanRegex, oldSkillLevel));
-    console.log(oldSkillLevel);
+    let newSkillLevel = romanToNumber(itemName.match(romanRegex)[0]);
+    for (let i = 0; i < skillExpMapping.length; i++) {
+      if (expNumber >= skillExpMapping[i][1]) {
+        newSkillLevel = skillExpMapping[i][0];
+      }
+    }
+    item.setName(itemName.replace(romanRegex, numberToRoman(newSkillLevel)));
   }
 
-  let numberString = lore.toLocaleString().replace(/[^0-9.]/g, "");
-  let number = parseFloat(numberString);
 
-  ChatLib.chat(number);
 
-  console.log(lore.forEach((line) => console.log(line)));
+  // console.log(lore.forEach((line) => console.log(line)));
 });
 
 // register("itemTooltip", (lore, item, event) => {
