@@ -2,6 +2,7 @@
 /// <reference lib="es2015" />
 
 import Settings from "./config";
+import { romanToNumber, numberToRoman } from "./utils/romanNumerals";
 
 register("command", () => Settings.openGUI()).setName("dt", true);
 
@@ -218,3 +219,71 @@ register("chat", (event) => {
     cancel(event);
   }
 });
+
+// register("tick", () => {
+//   // ChatLib.chat(
+//   //   Player.getInventory().getStackInSlot(Player.getHeldItemIndex())
+//   //     ? Player.getInventory().getStackInSlot(Player.getHeldItemIndex())
+//   //     : "Empty"
+//   // );
+
+//   // if (Player.getContainer().getName() == "Your Skills")
+//   //   ChatLib.chat(Player.getContainer().getName());
+
+//   if (Player.getContainer().getName() == "Your Skills") {
+//     Player.getContainer()
+//       .getItems()
+//       .forEach((item) => {
+//         if (item) {
+//           if (
+//             item.getRegistryName() == "minecraft:stone_sword" &&
+//             item.getName().includes("§aCombat") //§aCombat
+//           ) {
+//             ChatLib.chat(item.getName());
+//             console.log(item.getName());
+//             if (item.getName().match(/(I|V|X|L)+/)) {
+//               item.setName(
+//                 item
+//                   .getName()
+//                   .replace(
+//                     /(I|V|X|L)+/,
+//                     romanToNumber(item.getName().match(/(I|V|X|L)+/)[0])
+//                   )
+//               );
+//             }
+//           }
+//         }
+//       });
+//   }
+// });
+
+register("itemTooltip", (lore, item, event) => {
+  if (Player.getContainer().getName() !== "Your Skills") {
+    return;
+  }
+
+  console.log(item.getName());
+
+  let itemName = item.getName();
+  let romanRegex = /(I|V|X|L)+/;
+  let oldSkillLevel = 0;
+
+  if (itemName.match(romanRegex)) {
+    let oldSkillLevel = romanToNumber(itemName.match(romanRegex)[0]);
+    // item.setName(item.getName().replace(romanRegex, oldSkillLevel));
+    console.log(oldSkillLevel);
+  }
+
+  let numberString = lore.toLocaleString().replace(/[^0-9.]/g, "");
+  let number = parseFloat(numberString);
+
+  ChatLib.chat(number);
+
+  console.log(lore.forEach((line) => console.log(line)));
+});
+
+// register("itemTooltip", (lore, item, event) => {
+//   if (Player.getContainer().getName() == "Your Skills") {
+//     cancel(event);
+//   }
+// });
