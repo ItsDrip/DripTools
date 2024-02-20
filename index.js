@@ -3,6 +3,7 @@
 
 import Settings from "./config";
 import { romanToNumber, numberToRoman } from "./utils/romanNumerals";
+import { getLevelByExp } from "./utils/skillExpMappings";
 
 register("command", () => Settings.openGUI()).setName("dt", true);
 
@@ -257,83 +258,43 @@ register("chat", (event) => {
 //   }
 // });
 
-var skillExpMapping = [
-  [60, 111672425],
-  [61, 119072425],
-  [62, 126872425],
-  [63, 135072425],
-  [64, 143672425],
-  [65, 152672425],
-  [66, 162072425],
-  [67, 171872425],
-  [68, 182072425],
-  [69, 192672425],
-  [70, 203672425],
-  [71, 215172425],
-  [72, 227172425],
-  [73, 239672425],
-  [74, 252672425],
-  [75, 266172425],
-  [76, 280172425],
-  [77, 294672425],
-  [78, 309672425],
-  [79, 325172425],
-  [80, 341172425],
-  [81, 357772425],
-  [82, 374972425],
-  [83, 392772425],
-  [84, 411172425],
-  [85, 430172425],
-  [86, 449772425],
-  [87, 469972425],
-  [88, 490772425],
-  [89, 512172425],
-  [90, 534172425],
-  [91, 556872425],
-  [92, 580272425],
-  [93, 604372425],
-  [94, 629172425],
-  [95, 654672425],
-  [96, 680872425],
-  [97, 707772425],
-  [98, 735372425],
-  [99, 763672425],
-  [100, 792672425]
-];
-
-
 register("itemTooltip", (lore, item, event) => {
   if (Player.getContainer().getName() !== "Your Skills") {
     return;
   }
 
   let itemName = item.getName();
-  let romanRegex = /(I|V|X|L)+/;
+  let romanRegex = /(I|V|X|L|C)+/;
 
   let loreString = lore.toLocaleString().replace(/,/g, "");
-
   let match = loreString.match(/§r §6(\d+)/);
-  let expNumber = (match ? match[1] : null);
 
+  if (match == null) return;
+
+  let expNumber = match[1];
+  // Coleweight conflicts?
+  // Check roman matchers (Combat en Carpentry matchen)
   // ChatLib.chat(expNumber ? expNumber : "No match");
 
   if (itemName.match(romanRegex)) {
     let newSkillLevel = romanToNumber(itemName.match(romanRegex)[0]);
-    for (let i = 0; i < skillExpMapping.length; i++) {
-      if (expNumber >= skillExpMapping[i][1]) {
-        newSkillLevel = skillExpMapping[i][0];
-      }
-    }
-    item.setName(itemName.replace(romanRegex, numberToRoman(newSkillLevel)));
+    newSkillLevel = getLevelByExp(expNumber);
+    ChatLib.chat(newSkillLevel);
+    item.setName(itemName.replace(romanRegex, newSkillLevel));
   }
 
-
-
-  // console.log(lore.forEach((line) => console.log(line)));
+  console.log(lore.forEach((line) => console.log(line)));
 });
 
-// register("itemTooltip", (lore, item, event) => {
-//   if (Player.getContainer().getName() == "Your Skills") {
-//     cancel(event);
-//   }
-// });
+register("command", (args) => {
+  var loreString =
+    "§o§a37ombat 37§r (#0272)§5§o§7Fight mobs and special bosses to§5§o§7earn Combat XP!§5§o§5§o§7§8Max Skill level reached!§5§o§e§l§m                    §r §6174,207,713.4§5§o§5§o§eClick to view!§8minecraft:stone_sword§8NBT: 3 tag(s)";
+  var loreString2 =
+    "§o§a37ombat 37§r (#0272)§5§o§7Fight mobs and special bosses to§5§o§7earn Combat XP!§5§o§5§o§7§8Max Skill level reached!§5§o§e§l§m                    §r w!§8minecraft:stone_sword§8NBT: 3 tag(s)";
+  loreString2 = loreString2.replace(/,/g, "");
+  var match = loreString2.match(/§r §6(\d+)/);
+  if (match == null) return;
+  for (i = 0; i < match.length; i++) {
+    ChatLib.chat(match[i]);
+  }
+}).setName("test");
