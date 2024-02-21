@@ -3,7 +3,7 @@
 
 import Settings from "./config";
 import { romanToNumber, numberToRoman } from "./utils/romanNumerals";
-import { getLevelByExp } from "./utils/skillExpMappings";
+import { getLevelByExp, getExpByLevel } from "./utils/skillExpMappings";
 
 register("command", () => Settings.openGUI()).setName("dt", true);
 
@@ -264,37 +264,41 @@ register("itemTooltip", (lore, item, event) => {
   }
 
   let itemName = item.getName();
-  let romanRegex = /(I|V|X|L|C)+/;
+  let romanRegex = / (I|V|X|L|C)+/;
 
   let loreString = lore.toLocaleString().replace(/,/g, "");
   let match = loreString.match(/§r §6(\d+)/);
 
   if (match == null) return;
 
-  let expNumber = match[1];
+  let expNumber = Number(match[1]);
   // Coleweight conflicts?
   // Check roman matchers (Combat en Carpentry matchen)
   // ChatLib.chat(expNumber ? expNumber : "No match");
 
   if (itemName.match(romanRegex)) {
-    let newSkillLevel = romanToNumber(itemName.match(romanRegex)[0]);
-    newSkillLevel = getLevelByExp(expNumber);
-    ChatLib.chat(newSkillLevel);
-    item.setName(itemName.replace(romanRegex, newSkillLevel));
+    let newSkillLevel = romanToNumber(itemName.match(romanRegex)[0].trim());
+    let totalSkillExp = getExpByLevel(newSkillLevel) + expNumber;
+    newSkillLevel = getLevelByExp(totalSkillExp);
+    ChatLib.chat(
+      getExpByLevel(newSkillLevel) +
+        " + " +
+        expNumber +
+        " = " +
+        totalSkillExp +
+        " exp becomes level " +
+        newSkillLevel +
+        "! This is " +
+        numberToRoman(newSkillLevel) +
+        " in roman!"
+    );
+    newSkillLevel = numberToRoman(newSkillLevel);
+    item.setName(itemName.replace(romanRegex, " " + newSkillLevel));
   }
 
-  console.log(lore.forEach((line) => console.log(line)));
+  // console.log(lore.forEach((line) => console.log(line)));
 });
 
 register("command", (args) => {
-  var loreString =
-    "§o§a37ombat 37§r (#0272)§5§o§7Fight mobs and special bosses to§5§o§7earn Combat XP!§5§o§5§o§7§8Max Skill level reached!§5§o§e§l§m                    §r §6174,207,713.4§5§o§5§o§eClick to view!§8minecraft:stone_sword§8NBT: 3 tag(s)";
-  var loreString2 =
-    "§o§a37ombat 37§r (#0272)§5§o§7Fight mobs and special bosses to§5§o§7earn Combat XP!§5§o§5§o§7§8Max Skill level reached!§5§o§e§l§m                    §r w!§8minecraft:stone_sword§8NBT: 3 tag(s)";
-  loreString2 = loreString2.replace(/,/g, "");
-  var match = loreString2.match(/§r §6(\d+)/);
-  if (match == null) return;
-  for (i = 0; i < match.length; i++) {
-    ChatLib.chat(match[i]);
-  }
+  ChatLib.chat("Data for level: " + args + " = " + getExpByLevel(args));
 }).setName("test");
