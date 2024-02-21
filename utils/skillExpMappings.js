@@ -40,9 +40,17 @@ var skillExpMapping = [
 ];
 
 export function getLevelByExp(exp) {
-  return skillExpMapping.findIndex((value) => value > exp) - 1;
+  if (exp < 0 || exp > skillExpMapping[skillExpMapping.length-1]){
+    return -1;
+  }
+  // ChatLib.chat(skillExpMapping.findIndex((value) => value >= exp) - 1)
+  return skillExpMapping.findIndex((value) => value >= exp) - 1;
+  //! SMB means suck my balls
 }
 
 export function getExpByLevel(level) {
+  if (level < 0 || level > 250){
+    return -1;
+  }
   return skillExpMapping[level];
 }

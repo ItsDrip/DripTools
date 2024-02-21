@@ -258,6 +258,7 @@ register("chat", (event) => {
 //   }
 // });
 
+
 register("itemTooltip", (lore, item, event) => {
   if (Player.getContainer().getName() !== "Your Skills") {
     return;
@@ -273,7 +274,6 @@ register("itemTooltip", (lore, item, event) => {
 
   let expNumber = Number(match[1]);
   // Coleweight conflicts?
-  // Check roman matchers (Combat en Carpentry matchen)
   // ChatLib.chat(expNumber ? expNumber : "No match");
 
   if (itemName.match(romanRegex)) {
@@ -300,5 +300,9 @@ register("itemTooltip", (lore, item, event) => {
 });
 
 register("command", (args) => {
-  ChatLib.chat("Data for level: " + args + " = " + getExpByLevel(args));
-}).setName("test");
+  ChatLib.chat("Exp req for level: " + args + " = " + getExpByLevel(args));
+}).setName("getexp");
+
+register("command", (args) => {
+  ChatLib.chat("Level with " + args + " exp = " + getLevelByExp(args));
+}).setName("getlevel");
