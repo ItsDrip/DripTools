@@ -259,12 +259,32 @@ register("chat", (event) => {
 // });
 
 
+let newSkillLevels = {
+  combat: -1,
+  farming: -1,
+  fishing: -1,
+  mining: -1,
+  foraging: -1,
+  enchanting: -1,
+  alchemy: -1,
+  carpentry: -1,
+  runecrafting: -1,
+  taming: -1,
+  social: -1,
+};
 register("itemTooltip", (lore, item, event) => {
   if (Player.getContainer().getName() !== "Your Skills") {
     return;
   }
 
   let itemName = item.getName();
+  if (
+    newSkillLevels[
+      itemName.slice(2, itemName.indexOf(" ")).toLowerCase()
+    ] !== -1
+  ) {
+    return;
+  }
   let romanRegex = / (I|V|X|L|C)+/;
 
   let loreString = lore.toLocaleString().replace(/,/g, "");
@@ -297,6 +317,9 @@ register("itemTooltip", (lore, item, event) => {
   }
 
   // console.log(lore.forEach((line) => console.log(line)));
+    newSkillLevels[
+      itemName.slice(2, itemName.indexOf(" ")).toLowerCase()
+    ] = newSkillLevel;
 });
 
 register("command", (args) => {
