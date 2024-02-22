@@ -49,16 +49,23 @@ var skillExpMapping = [
 ];
 
 export function getLevelByExp(exp) {
-  if (exp < 0 || exp > skillExpMapping[skillExpMapping.length-1]){
+  // If requesting a negative amount of exp, return -1
+  if (exp < 0) {
     return -1;
   }
-  // ChatLib.chat(skillExpMapping.findIndex((value) => value >= exp) - 1)
-  return skillExpMapping.findIndex((value) => value >= exp) - 1;
-  //! SMB means suck my balls
+
+  // If a player's exp is (somehow) greater than the max defined exp level, return the max level
+  if (exp >= skillExpMapping[skillExpMapping.length - 1]) {
+    return skillExpMapping.length - 1;
+  } else {
+    // Otherwise, find the index of the first value in the array that is greater than the exp. Subtract 1 to get the level (remember that the array starts with level 0, meaning that level X is always at index X)
+    return skillExpMapping.findIndex((value) => value > exp) - 1;
+  }
 }
 
 export function getExpByLevel(level) {
-  if (level < 0 || level > 250){
+  // If the level is out of bounds, return -1
+  if (level < 0 || level > skillExpMapping.length - 1) {
     return -1;
   }
   return skillExpMapping[level];
