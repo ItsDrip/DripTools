@@ -272,11 +272,32 @@ let newSkillLevels = {
   social: -1,
 };
 
-
-// TODO: fix skill calculation
-// TODO: fix functionality for taming and social
 // TODO: confirm if this works with SBA's roman to number setting
+// TODO: make code run on open gui, not on hover (SkyHanni mode)
+// TODO: edit lore option?
 // ? add rainbow name to skill
+
+register("tick", () => {
+  if (
+    Player.getContainer().getName() !== "Your Skills" &&
+    newSkillLevels.combat !== -1
+  ) {
+    newSkillLevels = {
+      combat: -1,
+      farming: -1,
+      fishing: -1,
+      mining: -1,
+      foraging: -1,
+      enchanting: -1,
+      alchemy: -1,
+      carpentry: -1,
+      runecrafting: -1,
+      taming: -1,
+      social: -1,
+    };  
+  }
+});
+
 register("itemTooltip", (lore, item, event) => {
   // If the item is not in the "Your Skills" menu, return
   if (Player.getContainer().getName() !== "Your Skills") {
@@ -289,22 +310,24 @@ register("itemTooltip", (lore, item, event) => {
   let itemName = item.getName();
   // If the item is not a skill, return
   // Every skill is initialized to -1, so if it's not -1, it's been set and we retun
+
   if (
-    newSkillLevels[
-      itemName.slice(2, itemName.indexOf(" ")).toLowerCase()
-    ] !== -1
+    newSkillLevels[itemName.slice(2, itemName.indexOf(" ")).toLowerCase()] !==
+    -1
   ) {
     return;
   }
 
-  let romanRegex = / (I|V|X|L|C)+/;
+  let romanRegex = / (I|V|X|L|C)+/g;
 
   let loreString = lore.toLocaleString().replace(/,/g, "");
-  let match = loreString.match(/§r §6(\d+)/);
+  let overflowExpText = loreString.match(/§r (§6|§e)(\d+)/g);
 
-  if (match == null) return;
+  // console.log(loreString);
 
-  let expNumber = Number(match[1]);
+  if (overflowExpText == null) return;
+
+  let expNumber = Number(overflowExpText[0].slice(5));
   //! Coleweight conflicts?
 
   if (itemName.match(romanRegex)) {
@@ -314,16 +337,37 @@ register("itemTooltip", (lore, item, event) => {
     ! but the last level of the skill (50 or 60) is not included in that.
     ! This means that we are crediting the player with 1 too many levels 
     */
+    if (loreString.includes("§8Max Skill level reached!")) {
+      newSkillLevel -= 1;
+    }
+
+    let progressToNextLevel = loreString.match(/§e(\d+\.?\d*)%/);
+    if (progressToNextLevel != null){
+      if (progressToNextLevel[1] > 100){
+        newSkillLevel -= 1;
+      }
+    }
+    // ChatLib.chat(
+      //   getExpByLevel(newSkillLevel) +
+      //     " + " +
+      //     expNumber +
+      //     " = " +
+      //     totalSkillExp +
+      //     " exp becomes level " +
+      //     getLevelByExp(totalSkillExp) +
+      //     "! This is " +
+      //     numberToRoman(getLevelByExp(totalSkillExp)) +
+      //     " in roman!"
+      // );
+      
     let totalSkillExp = getExpByLevel(newSkillLevel) + expNumber;
     newSkillLevel = getLevelByExp(totalSkillExp);
+
     item.setName(
       itemName.replace(romanRegex, " " + numberToRoman(newSkillLevel))
     );
 
-    newSkillLevels[
-      itemName.slice(2, itemName.indexOf(" ")).toLowerCase()
-    ] = newSkillLevel;
-
+    newSkillLevels[itemName.slice(2, itemName.indexOf(" ")).toLowerCase()] = newSkillLevel;
   }
 });
 
