@@ -258,7 +258,6 @@ register("chat", (event) => {
 //   }
 // });
 
-
 let newSkillLevels = {
   combat: -1,
   farming: -1,
@@ -272,12 +271,24 @@ let newSkillLevels = {
   taming: -1,
   social: -1,
 };
+
+
+// TODO: fix skill calculation
+// TODO: fix functionality for taming and social
+// TODO: confirm if this works with SBA's roman to number setting
+// ? add rainbow name to skill
 register("itemTooltip", (lore, item, event) => {
+  // If the item is not in the "Your Skills" menu, return
   if (Player.getContainer().getName() !== "Your Skills") {
     return;
   }
 
+  // ? This function RGB-ifies the items name
+  // item.setName(item.getName().replace("§a", "§z"));
+
   let itemName = item.getName();
+  // If the item is not a skill, return
+  // Every skill is initialized to -1, so if it's not -1, it's been set and we retun
   if (
     newSkillLevels[
       itemName.slice(2, itemName.indexOf(" ")).toLowerCase()
@@ -285,6 +296,7 @@ register("itemTooltip", (lore, item, event) => {
   ) {
     return;
   }
+
   let romanRegex = / (I|V|X|L|C)+/;
 
   let loreString = lore.toLocaleString().replace(/,/g, "");
@@ -293,39 +305,34 @@ register("itemTooltip", (lore, item, event) => {
   if (match == null) return;
 
   let expNumber = Number(match[1]);
-  // Coleweight conflicts?
-  // ChatLib.chat(expNumber ? expNumber : "No match");
+  //! Coleweight conflicts?
 
   if (itemName.match(romanRegex)) {
     let newSkillLevel = romanToNumber(itemName.match(romanRegex)[0].trim());
+    /*
+    ! We add skill exp for a level to the assument amount of overflow, 
+    ! but the last level of the skill (50 or 60) is not included in that.
+    ! This means that we are crediting the player with 1 too many levels 
+    */
     let totalSkillExp = getExpByLevel(newSkillLevel) + expNumber;
     newSkillLevel = getLevelByExp(totalSkillExp);
-    ChatLib.chat(
-      getExpByLevel(newSkillLevel) +
-        " + " +
-        expNumber +
-        " = " +
-        totalSkillExp +
-        " exp becomes level " +
-        newSkillLevel +
-        "! This is " +
-        numberToRoman(newSkillLevel) +
-        " in roman!"
+    item.setName(
+      itemName.replace(romanRegex, " " + numberToRoman(newSkillLevel))
     );
-    newSkillLevel = numberToRoman(newSkillLevel);
-    item.setName(itemName.replace(romanRegex, " " + newSkillLevel));
-  }
 
-  // console.log(lore.forEach((line) => console.log(line)));
     newSkillLevels[
       itemName.slice(2, itemName.indexOf(" ")).toLowerCase()
     ] = newSkillLevel;
+
+  }
 });
 
+// * For testing
 register("command", (args) => {
   ChatLib.chat("Exp req for level: " + args + " = " + getExpByLevel(args));
 }).setName("getexp");
 
+// * For testing
 register("command", (args) => {
   ChatLib.chat("Level with " + args + " exp = " + getLevelByExp(args));
 }).setName("getlevel");
