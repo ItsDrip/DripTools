@@ -258,7 +258,7 @@ register("chat", (event) => {
 //   }
 // });
 
-let newSkillLevels = {
+newSkillLevels = {
   combat: -1,
   farming: -1,
   fishing: -1,
@@ -282,6 +282,7 @@ register("tick", () => {
     Player.getContainer().getName() !== "Your Skills" &&
     newSkillLevels.combat !== -1
   ) {
+    console.log("Called tick even not in skills menu !");
     newSkillLevels = {
       combat: -1,
       farming: -1,
@@ -294,29 +295,62 @@ register("tick", () => {
       runecrafting: -1,
       taming: -1,
       social: -1,
-    };  
+    };
   }
 });
 
-register("itemTooltip", (lore, item, event) => {
+register("tick", () => {
   // If the item is not in the "Your Skills" menu, return
   if (Player.getContainer().getName() !== "Your Skills") {
     return;
   }
-
-  // ? This function RGB-ifies the items name
-  // item.setName(item.getName().replace("§a", "§z"));
-
-  let itemName = item.getName();
-  // If the item is not a skill, return
-  // Every skill is initialized to -1, so if it's not -1, it's been set and we retun
-
-  if (
-    newSkillLevels[itemName.slice(2, itemName.indexOf(" ")).toLowerCase()] !==
-    -1
-  ) {
+  if (newSkillLevels.combat !== -1) {
+    console.log("Called!" + Date.now());
     return;
   }
+
+  // If the item is not a skill, return
+  // Every skill is initialized to -1, so if it's not -1, it's been set and we return
+  Player.getContainer()
+    .getItems()
+    .forEach((item) => {
+      if (
+        item === null ||
+        newSkillLevels[
+          item.getName().slice(2, item.getName().indexOf(" ")).toLowerCase()
+        ] !== -1
+      ) {
+        return;
+      }
+      var newName = getNewSkillLevelName(item.getLore(), item);
+      if (newName !== undefined) {
+        // console.log(newSkillLevels[item.getName().slice(2, item.getName().indexOf(" ")).toLowerCase()]);
+        item.setName(newName);
+      }
+      // console.log(getNewSkillLevelName(item.getLore(), item));
+    });
+});
+
+function getSkillLevelFromItem(item) {
+  let itemName = item.getName();
+  let romanRegex = / (I|V|X|L|C)+/g;
+  if (itemName.match(romanRegex) == null) {
+    return null;
+  }
+  return romanToNumber(itemName.match(romanRegex)[0].trim());
+}
+
+function getSkillOverFlowFromItem(lore) {
+  let loreString = lore.toLocaleString().replace(/,/g, "");
+  let overFlowExpRegex = /§r (§6|§e)(\d+)/g;
+  let overflowExpText = loreString.match(overFlowExpRegex);
+  if (overflowExpText == null) {
+    return null;
+  }
+}
+
+function getNewSkillLevelName(lore, item) {
+  let itemName = item.getName();
 
   let romanRegex = / (I|V|X|L|C)+/g;
 
@@ -330,46 +364,45 @@ register("itemTooltip", (lore, item, event) => {
   let expNumber = Number(overflowExpText[0].slice(5));
   //! Coleweight conflicts?
 
-  if (itemName.match(romanRegex)) {
-    let newSkillLevel = romanToNumber(itemName.match(romanRegex)[0].trim());
-    /*
-    ! We add skill exp for a level to the assument amount of overflow, 
-    ! but the last level of the skill (50 or 60) is not included in that.
-    ! This means that we are crediting the player with 1 too many levels 
-    */
-    if (loreString.includes("§8Max Skill level reached!")) {
+  let newSkillLevel = getSkillLevelFromItem(item);
+  // We add skill exp for a level to the assument amount of overflow, but the last level of the skill (50 or 60) is not included in that. This means that we are crediting the player with 1 too many levels, we correct for that
+  if (loreString.includes("§8Max Skill level reached!")) {
+    newSkillLevel -= 1;
+  }
+
+  let progressToNextLevel = loreString.match(/§e(\d+\.?\d*)%/);
+  if (progressToNextLevel != null) {
+    if (progressToNextLevel[1] > 100) {
       newSkillLevel -= 1;
     }
-
-    let progressToNextLevel = loreString.match(/§e(\d+\.?\d*)%/);
-    if (progressToNextLevel != null){
-      if (progressToNextLevel[1] > 100){
-        newSkillLevel -= 1;
-      }
-    }
-    // ChatLib.chat(
-      //   getExpByLevel(newSkillLevel) +
-      //     " + " +
-      //     expNumber +
-      //     " = " +
-      //     totalSkillExp +
-      //     " exp becomes level " +
-      //     getLevelByExp(totalSkillExp) +
-      //     "! This is " +
-      //     numberToRoman(getLevelByExp(totalSkillExp)) +
-      //     " in roman!"
-      // );
-      
-    let totalSkillExp = getExpByLevel(newSkillLevel) + expNumber;
-    newSkillLevel = getLevelByExp(totalSkillExp);
-
-    item.setName(
-      itemName.replace(romanRegex, " " + numberToRoman(newSkillLevel))
-    );
-
-    newSkillLevels[itemName.slice(2, itemName.indexOf(" ")).toLowerCase()] = newSkillLevel;
   }
-});
+  // ChatLib.chat(
+  //   getExpByLevel(newSkillLevel) +
+  //     " + " +
+  //     expNumber +
+  //     " = " +
+  //     totalSkillExp +
+  //     " exp becomes level " +
+  //     getLevelByExp(totalSkillExp) +
+  //     "! This is " +
+  //     numberToRoman(getLevelByExp(totalSkillExp)) +
+  //     " in roman!"
+  // );
+
+  let totalSkillExp = getExpByLevel(newSkillLevel) + expNumber;
+  newSkillLevel = getLevelByExp(totalSkillExp);
+
+  let newSkillTitle = itemName.replace(
+    romanRegex,
+    " " + numberToRoman(newSkillLevel)
+  );
+
+  newSkillLevels[
+    item.getName().slice(2, item.getName().indexOf(" ")).toLowerCase()
+  ] = newSkillLevel;
+
+  return newSkillTitle;
+}
 
 // * For testing
 register("command", (args) => {
