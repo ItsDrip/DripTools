@@ -305,7 +305,7 @@ register("tick", () => {
     return;
   }
   if (newSkillLevels.combat !== -1) {
-    console.log("Called!" + Date.now());
+    // console.log("Called!" + Date.now());
     return;
   }
 
@@ -324,13 +324,96 @@ register("tick", () => {
       }
       var newName = getNewSkillLevelName(item.getLore(), item);
       if (newName !== undefined) {
-        // console.log(newSkillLevels[item.getName().slice(2, item.getName().indexOf(" ")).toLowerCase()]);
+        console.log(
+          newSkillLevels[
+            item.getName().slice(2, item.getName().indexOf(" ")).toLowerCase()
+          ]
+        );
         item.setName(newName);
       }
       // console.log(getNewSkillLevelName(item.getLore(), item));
     });
 });
 
+function getNewSkillLevelName(lore, item) {
+  let itemName = item.getName();
+
+  let romanRegex = / (I|V|X|L|C)+/g;
+
+  let loreString = lore.toLocaleString().replace(/,/g, "");
+  let overflowExpText = loreString.match(/§r (§6|§e)(\d+)/g);
+
+  // console.log(loreString);
+
+  if (overflowExpText == null) return;
+
+  // let expNumber = Number(overflowExpText[0].slice(5));
+  let expNumber = getSkillOverFlowFromItem(lore);
+  //! Coleweight conflicts?
+
+  let expLevel = getSkillLevelFromItem(item);
+  // We add skill exp for a level to the assument amount of overflow, but the last level of the skill (50 or 60) is not included in that. This means that we are crediting the player with 1 too many levels, we correct for that
+  // if (loreString.includes("§8Max Skill level reached!")) {
+  //   newSkillLevel -= 1;
+  // }
+
+  // let progressToNextLevel = loreString.match(/§e(\d+\.?\d*)%/);
+  // if (progressToNextLevel != null) {
+  //   if (progressToNextLevel[1] > 100) {
+  //     newSkillLevel -= 1;
+  //   }
+  // }
+
+  if (expAmountIsOverFlow(lore)) {
+    expLevel -= 1;
+  }
+  // ChatLib.chat(
+  //   getExpByLevel(newSkillLevel) +
+  //     " + " +
+  //     expNumber +
+  //     " = " +
+  //     totalSkillExp +
+  //     " exp becomes level " +
+  //     getLevelByExp(totalSkillExp) +
+  //     "! This is " +
+  //     numberToRoman(getLevelByExp(totalSkillExp)) +
+  //     " in roman!"
+  // );
+
+  let totalSkillExp = getExpByLevel(expLevel) + expNumber;
+  let newSkillLevel = getLevelByExp(totalSkillExp);
+
+  let newSkillTitle = itemName.replace(
+    romanRegex,
+    " " + numberToRoman(newSkillLevel)
+  );
+
+  newSkillLevels[
+    item.getName().slice(2, item.getName().indexOf(" ")).toLowerCase()
+  ] = newSkillLevel;
+
+  console.log(
+    "Set " +
+      item.getName().slice(2, item.getName().indexOf(" ")).toLowerCase() +
+      " to " +
+      newSkillLevels[
+        item.getName().slice(2, item.getName().indexOf(" ")).toLowerCase()
+      ]
+  );
+
+  return newSkillTitle;
+}
+
+// * For testing
+register("command", (args) => {
+  ChatLib.chat("Exp req for level: " + args + " = " + getExpByLevel(args));
+}).setName("getexp");
+
+// * For testing
+register("command", (args) => {
+  ChatLib.chat("Level with " + args + " exp = " + getLevelByExp(args));
+}).setName("getlevel");
+ 
 function getSkillLevelFromItem(item) {
   let itemName = item.getName();
   let romanRegex = / (I|V|X|L|C)+/g;
@@ -347,69 +430,20 @@ function getSkillOverFlowFromItem(lore) {
   if (overflowExpText == null) {
     return null;
   }
+  return Number(overflowExpText[0].slice(5));
 }
 
-function getNewSkillLevelName(lore, item) {
-  let itemName = item.getName();
-
-  let romanRegex = / (I|V|X|L|C)+/g;
-
+function expAmountIsOverFlow(lore) {
   let loreString = lore.toLocaleString().replace(/,/g, "");
-  let overflowExpText = loreString.match(/§r (§6|§e)(\d+)/g);
-
-  // console.log(loreString);
-
-  if (overflowExpText == null) return;
-
-  let expNumber = Number(overflowExpText[0].slice(5));
-  //! Coleweight conflicts?
-
-  let newSkillLevel = getSkillLevelFromItem(item);
-  // We add skill exp for a level to the assument amount of overflow, but the last level of the skill (50 or 60) is not included in that. This means that we are crediting the player with 1 too many levels, we correct for that
   if (loreString.includes("§8Max Skill level reached!")) {
-    newSkillLevel -= 1;
+    return true;
   }
 
   let progressToNextLevel = loreString.match(/§e(\d+\.?\d*)%/);
   if (progressToNextLevel != null) {
     if (progressToNextLevel[1] > 100) {
-      newSkillLevel -= 1;
+      return true;
     }
   }
-  // ChatLib.chat(
-  //   getExpByLevel(newSkillLevel) +
-  //     " + " +
-  //     expNumber +
-  //     " = " +
-  //     totalSkillExp +
-  //     " exp becomes level " +
-  //     getLevelByExp(totalSkillExp) +
-  //     "! This is " +
-  //     numberToRoman(getLevelByExp(totalSkillExp)) +
-  //     " in roman!"
-  // );
-
-  let totalSkillExp = getExpByLevel(newSkillLevel) + expNumber;
-  newSkillLevel = getLevelByExp(totalSkillExp);
-
-  let newSkillTitle = itemName.replace(
-    romanRegex,
-    " " + numberToRoman(newSkillLevel)
-  );
-
-  newSkillLevels[
-    item.getName().slice(2, item.getName().indexOf(" ")).toLowerCase()
-  ] = newSkillLevel;
-
-  return newSkillTitle;
+  return false;
 }
-
-// * For testing
-register("command", (args) => {
-  ChatLib.chat("Exp req for level: " + args + " = " + getExpByLevel(args));
-}).setName("getexp");
-
-// * For testing
-register("command", (args) => {
-  ChatLib.chat("Level with " + args + " exp = " + getLevelByExp(args));
-}).setName("getlevel");
