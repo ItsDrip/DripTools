@@ -221,43 +221,6 @@ register("chat", (event) => {
   }
 });
 
-// register("tick", () => {
-//   // ChatLib.chat(
-//   //   Player.getInventory().getStackInSlot(Player.getHeldItemIndex())
-//   //     ? Player.getInventory().getStackInSlot(Player.getHeldItemIndex())
-//   //     : "Empty"
-//   // );
-
-//   // if (Player.getContainer().getName() == "Your Skills")
-//   //   ChatLib.chat(Player.getContainer().getName());
-
-//   if (Player.getContainer().getName() == "Your Skills") {
-//     Player.getContainer()
-//       .getItems()
-//       .forEach((item) => {
-//         if (item) {
-//           if (
-//             item.getRegistryName() == "minecraft:stone_sword" &&
-//             item.getName().includes("§aCombat") //§aCombat
-//           ) {
-//             ChatLib.chat(item.getName());
-//             console.log(item.getName());
-//             if (item.getName().match(/(I|V|X|L)+/)) {
-//               item.setName(
-//                 item
-//                   .getName()
-//                   .replace(
-//                     /(I|V|X|L)+/,
-//                     romanToNumber(item.getName().match(/(I|V|X|L)+/)[0])
-//                   )
-//               );
-//             }
-//           }
-//         }
-//       });
-//   }
-// });
-
 newSkillLevels = {
   combat: -1,
   farming: -1,
@@ -282,7 +245,6 @@ register("tick", () => {
     Player.getContainer().getName() !== "Your Skills" &&
     newSkillLevels.combat !== -1
   ) {
-    console.log("Called tick even not in skills menu !");
     newSkillLevels = {
       combat: -1,
       farming: -1,
@@ -300,120 +262,50 @@ register("tick", () => {
 });
 
 register("tick", () => {
-  // If the item is not in the "Your Skills" menu, return
   if (Player.getContainer().getName() !== "Your Skills") {
     return;
   }
-  if (newSkillLevels.combat !== -1) {
-    // console.log("Called!" + Date.now());
-    return;
-  }
 
-  // If the item is not a skill, return
-  // Every skill is initialized to -1, so if it's not -1, it's been set and we return
   Player.getContainer()
     .getItems()
     .forEach((item) => {
-      if (
-        item === null ||
-        newSkillLevels[
-          item.getName().slice(2, item.getName().indexOf(" ")).toLowerCase()
-        ] !== -1
-      ) {
+      if (item === null) {
+        return;
+      }
+      let currentSkill = item
+        .getName()
+        .slice(2, item.getName().indexOf(" "))
+        .toLowerCase();
+      if (newSkillLevels[currentSkill] !== -1) {
+        item.setName(
+          getNameForNewSkillLevel(item, newSkillLevels[currentSkill])
+        );
         return;
       }
       var newName = getNewSkillLevelName(item.getLore(), item);
       if (newName !== undefined) {
-        console.log(
-          newSkillLevels[
-            item.getName().slice(2, item.getName().indexOf(" ")).toLowerCase()
-          ]
-        );
         item.setName(newName);
       }
-      // console.log(getNewSkillLevelName(item.getLore(), item));
     });
 });
 
 function getNewSkillLevelName(lore, item) {
-  let itemName = item.getName();
-
-  let romanRegex = / (I|V|X|L|C)+/g;
-
-  let loreString = lore.toLocaleString().replace(/,/g, "");
-  let overflowExpText = loreString.match(/§r (§6|§e)(\d+)/g);
-
-  // console.log(loreString);
-
-  if (overflowExpText == null) return;
-
-  // let expNumber = Number(overflowExpText[0].slice(5));
   let expNumber = getSkillOverFlowFromItem(lore);
-  //! Coleweight conflicts?
-
   let expLevel = getSkillLevelFromItem(item);
-  // We add skill exp for a level to the assument amount of overflow, but the last level of the skill (50 or 60) is not included in that. This means that we are crediting the player with 1 too many levels, we correct for that
-  // if (loreString.includes("§8Max Skill level reached!")) {
-  //   newSkillLevel -= 1;
-  // }
-
-  // let progressToNextLevel = loreString.match(/§e(\d+\.?\d*)%/);
-  // if (progressToNextLevel != null) {
-  //   if (progressToNextLevel[1] > 100) {
-  //     newSkillLevel -= 1;
-  //   }
-  // }
 
   if (expAmountIsOverFlow(lore)) {
     expLevel -= 1;
   }
-  // ChatLib.chat(
-  //   getExpByLevel(newSkillLevel) +
-  //     " + " +
-  //     expNumber +
-  //     " = " +
-  //     totalSkillExp +
-  //     " exp becomes level " +
-  //     getLevelByExp(totalSkillExp) +
-  //     "! This is " +
-  //     numberToRoman(getLevelByExp(totalSkillExp)) +
-  //     " in roman!"
-  // );
 
-  let totalSkillExp = getExpByLevel(expLevel) + expNumber;
-  let newSkillLevel = getLevelByExp(totalSkillExp);
-
-  let newSkillTitle = itemName.replace(
-    romanRegex,
-    " " + numberToRoman(newSkillLevel)
-  );
+  let newSkillLevel = getLevelByExp(getExpByLevel(expLevel) + expNumber);
 
   newSkillLevels[
     item.getName().slice(2, item.getName().indexOf(" ")).toLowerCase()
   ] = newSkillLevel;
 
-  console.log(
-    "Set " +
-      item.getName().slice(2, item.getName().indexOf(" ")).toLowerCase() +
-      " to " +
-      newSkillLevels[
-        item.getName().slice(2, item.getName().indexOf(" ")).toLowerCase()
-      ]
-  );
-
-  return newSkillTitle;
+  return getNameForNewSkillLevel(item, newSkillLevel);
 }
 
-// * For testing
-register("command", (args) => {
-  ChatLib.chat("Exp req for level: " + args + " = " + getExpByLevel(args));
-}).setName("getexp");
-
-// * For testing
-register("command", (args) => {
-  ChatLib.chat("Level with " + args + " exp = " + getLevelByExp(args));
-}).setName("getlevel");
- 
 function getSkillLevelFromItem(item) {
   let itemName = item.getName();
   let romanRegex = / (I|V|X|L|C)+/g;
@@ -446,6 +338,14 @@ function expAmountIsOverFlow(lore) {
     }
   }
   return false;
+}
+
+function getNameForNewSkillLevel(item, newSkillLevel) {
+  let romanRegex = / (I|V|X|L|C)+/g;
+  let newSkillTitle = item
+    .getName()
+    .replace(romanRegex, " " + numberToRoman(newSkillLevel));
+  return newSkillTitle;
 }
 
 // * For testing
