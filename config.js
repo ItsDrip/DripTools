@@ -141,6 +141,13 @@ class Settings {
     category: "Hiders",
   })
   profileIdHider = false;
+
+  @SwitchProperty({
+    name: "Fire Sale Hider",
+    description: "Hides the fire sale messages: §c♨ §5Random Skin §e(69420 §eleft)§c§r",
+    category: "Hiders",
+  })
+  fireSaleHider = false;
   
 
   constructor() {
