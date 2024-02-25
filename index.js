@@ -352,13 +352,3 @@ function getNameForNewSkillLevel(item, newSkillLevel) {
   }
   return newSkillTitle;
 }
-
-// * For testing
-register("command", (args) => {
-  ChatLib.chat("Exp req for level: " + args + " = " + getExpByLevel(args));
-}).setName("getexp");
-
-// * For testing
-register("command", (args) => {
-  ChatLib.chat("Level with " + args + " exp = " + getLevelByExp(args));
-}).setName("getlevel");
