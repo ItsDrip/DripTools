@@ -143,6 +143,22 @@ class Settings {
   profileIdHider = false;
 
   @SwitchProperty({
+    name: "Enable Overflow Skills",
+    description: "Enable showing overflow skill levels",
+    category: "Other",
+    subcategory: "Overflow Skills",
+  })
+  overflowSkills = false;
+
+  @SwitchProperty({
+    name: "Rainbowify Maxed Skills",
+    description: "Uses SBA's §zChroma§r to make the skills rainbow for which you have reached the max level",
+    category: "Other",
+    subcategory: "Overflow Skills",
+  })
+  rainbowOverFlowSkills = false;
+
+  @SwitchProperty({
     name: "Fire Sale Hider",
     description: "Hides the fire sale messages: §c♨ §5Random Skin §e(69420 §eleft)§c§r",
     category: "Hiders",

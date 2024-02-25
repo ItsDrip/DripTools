@@ -2,6 +2,8 @@
 /// <reference lib="es2015" />
 
 import Settings from "./config";
+import { romanToNumber, numberToRoman } from "./utils/romanNumerals";
+import { getLevelByExp, getExpByLevel } from "./utils/skillExpMappings";
 
 register("command", () => Settings.openGUI()).setName("dt", true);
 
@@ -218,6 +220,138 @@ register("chat", (event) => {
     cancel(event);
   }
 });
+
+newSkillLevels = {
+  combat: -1,
+  farming: -1,
+  fishing: -1,
+  mining: -1,
+  foraging: -1,
+  enchanting: -1,
+  alchemy: -1,
+  carpentry: -1,
+  runecrafting: -1,
+  taming: -1,
+  social: -1,
+};
+
+// ? edit lore option?
+// ? add option to change the skill level scaling?
+register("tick", () => {
+  if (!Settings.overflowSkills) {
+    return;
+  }
+  if (Player.getContainer().getName() !== "Your Skills") {
+    if (newSkillLevels.combat !== -1) {
+      newSkillLevels = {
+        combat: -1,
+        farming: -1,
+        fishing: -1,
+        mining: -1,
+        foraging: -1,
+        enchanting: -1,
+        alchemy: -1,
+        carpentry: -1,
+        runecrafting: -1,
+        taming: -1,
+        social: -1,
+      };
+    }
+    return;
+  }
+
+  Player.getContainer()
+    .getItems()
+    .forEach((item) => {
+      if (item === null) {
+        return;
+      }
+      let currentSkill = item
+        .getName()
+        .slice(2, item.getName().indexOf(" "))
+        .toLowerCase();
+      if (newSkillLevels[currentSkill] !== -1) {
+        item.setName(
+          getNameForNewSkillLevel(item, newSkillLevels[currentSkill])
+        );
+        return;
+      }
+      var newName = getNewSkillLevelName(item.getLore(), item);
+      if (newName !== undefined) {
+        item.setName(newName);
+      }
+    });
+});
+
+function getNewSkillLevelName(lore, item) {
+  let expNumber = getSkillOverFlowFromItem(lore);
+  let expLevel = getSkillLevelFromItem(item);
+
+  if (expAmountIsOverFlow(lore)) {
+    expLevel -= 1;
+  }
+
+  let newSkillLevel = getLevelByExp(getExpByLevel(expLevel) + expNumber);
+
+  newSkillLevels[
+    item.getName().slice(2, item.getName().indexOf(" ")).toLowerCase()
+  ] = newSkillLevel;
+
+  return getNameForNewSkillLevel(item, newSkillLevel);
+}
+
+function getSkillLevelFromItem(item) {
+  let itemName = item.getName();
+  let romanRegex = / (I|V|X|L|C)+/g;
+  if (itemName.match(romanRegex) == null) {
+    return null;
+  }
+  return romanToNumber(itemName.match(romanRegex)[0].trim());
+}
+
+function getSkillOverFlowFromItem(lore) {
+  let loreString = lore.toLocaleString().replace(/,/g, "");
+  let overFlowExpRegex = /§r (§6|§e)(\d+)/g;
+  let overflowExpText = loreString.match(overFlowExpRegex);
+  if (overflowExpText == null) {
+    return null;
+  }
+  return Number(overflowExpText[0].slice(5));
+}
+
+function expAmountIsOverFlow(lore) {
+  let loreString = lore.toLocaleString().replace(/,/g, "");
+  if (loreString.includes("§8Max Skill level reached!")) {
+    return true;
+  }
+
+  let progressToNextLevel = loreString.match(/§e(\d+\.?\d*)%/);
+  if (progressToNextLevel != null) {
+    if (progressToNextLevel[1] > 100) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function skillIsMaxed(lore) {
+  let loreString = lore.toLocaleString().replace(/,/g, "");
+  if (loreString.includes("§8Max Skill level reached!")) {
+    return true;
+  }
+  return false;
+}
+
+function getNameForNewSkillLevel(item, newSkillLevel) {
+  let romanRegex = / (I|V|X|L|C)+/g;
+  let newSkillTitle = item
+    .getName()
+    .replace(romanRegex, " " + numberToRoman(newSkillLevel));
+  if (Settings.rainbowOverFlowSkills && skillIsMaxed(item.getLore())) {
+    newSkillTitle = newSkillTitle.replace("§a", "§z");
+  }
+  return newSkillTitle;
+}
 
 register("chat", (event) => {
   if (!Settings.fireSaleHider) {
