@@ -235,34 +235,28 @@ newSkillLevels = {
   social: -1,
 };
 
-// TODO: confirm if this works with SBA's roman to number setting
-// TODO: make code run on open gui, not on hover (SkyHanni mode)
-// TODO: edit lore option?
-// ? add rainbow name to skill
-
+// ? edit lore option?
+// ? add option to change the skill level scaling?
 register("tick", () => {
-  if (
-    Player.getContainer().getName() !== "Your Skills" &&
-    newSkillLevels.combat !== -1
-  ) {
-    newSkillLevels = {
-      combat: -1,
-      farming: -1,
-      fishing: -1,
-      mining: -1,
-      foraging: -1,
-      enchanting: -1,
-      alchemy: -1,
-      carpentry: -1,
-      runecrafting: -1,
-      taming: -1,
-      social: -1,
-    };
+  if (!Settings.overflowSkills) {
+    return;
   }
-});
-
-register("tick", () => {
   if (Player.getContainer().getName() !== "Your Skills") {
+    if (newSkillLevels.combat !== -1) {
+      newSkillLevels = {
+        combat: -1,
+        farming: -1,
+        fishing: -1,
+        mining: -1,
+        foraging: -1,
+        enchanting: -1,
+        alchemy: -1,
+        carpentry: -1,
+        runecrafting: -1,
+        taming: -1,
+        social: -1,
+      };
+    }
     return;
   }
 
@@ -340,11 +334,22 @@ function expAmountIsOverFlow(lore) {
   return false;
 }
 
+function skillIsMaxed(lore) {
+  let loreString = lore.toLocaleString().replace(/,/g, "");
+  if (loreString.includes("§8Max Skill level reached!")) {
+    return true;
+  }
+  return false;
+}
+
 function getNameForNewSkillLevel(item, newSkillLevel) {
   let romanRegex = / (I|V|X|L|C)+/g;
   let newSkillTitle = item
     .getName()
     .replace(romanRegex, " " + numberToRoman(newSkillLevel));
+  if (Settings.rainbowOverFlowSkills && skillIsMaxed(item.getLore())) {
+    newSkillTitle = newSkillTitle.replace("§a", "§z");
+  }
   return newSkillTitle;
 }
 

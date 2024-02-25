@@ -141,6 +141,22 @@ class Settings {
     category: "Hiders",
   })
   profileIdHider = false;
+
+  @SwitchProperty({
+    name: "Enable Overflow Skills",
+    description: "Enable showing overflow skill levels",
+    category: "Other",
+    subcategory: "Overflow Skills",
+  })
+  overflowSkills = false;
+
+  @SwitchProperty({
+    name: "Rainbowify Maxed Skills",
+    description: "Uses SBA's §zChroma§r to make the skills rainbow for which you have reached the max level",
+    category: "Other",
+    subcategory: "Overflow Skills",
+  })
+  rainbowOverFlowSkills = false;
   
 
   constructor() {
