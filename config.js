@@ -1,9 +1,9 @@
 // prettier-ignore
 import { @Vigilant, @TextProperty, @ColorProperty, @ButtonProperty, @SwitchProperty, Color, @CheckboxProperty, @SelectorProperty } from 'Vigilance';
 
-@Vigilant("DripTools", "Settings", {
+@Vigilant("DripTools", "DripTools Settings", {
   getCategoryComparator: () => (a, b) => {
-    const categories = ["Chat Utilities", "Hiders"];
+    const categories = ["Chat Utilities", "Hiders", "Other"];
     return categories.indexOf(a.name) - categories.indexOf(b.name);
   },
   getSubcategoryComparator: () => (a, b) => {
