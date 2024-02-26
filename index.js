@@ -3,7 +3,38 @@
 
 import Settings from "./config";
 
-register("command", () => Settings.openGUI()).setName("dt", true);
+register("command", (arg1, arg2, arg3) => {
+  if (!arg1) {
+    Settings.openGUI();
+  }
+
+  if (arg1 === "setflare") {
+    setFlareCords(arg2, arg3);
+  }
+}).setName("dt", true);
+
+function setFlareCords(x, y) {
+  x = Number(x.replace(/[^0-9.]/g, ''));
+  y = Number(y.replace(/[^0-9.]/g, ''));
+  if (isNaN(x) || isNaN(y)) {
+    ChatLib.chat(
+      dripToolsPrefix +
+        "§cInvalid coordinates! Please use §6/dt setflare [x] [y]§c."
+    );
+    return;
+  }
+  Settings.flareX = x;
+  Settings.flareY = y;
+  flareTicksRemaining += 100;
+  ChatLib.chat(
+    dripToolsPrefix +
+      "§7Flare cords set to §6" +
+      Settings.flareX +
+      "§7, §6" +
+      Settings.flareY +
+      "§7!\n§7Showing a §b5 second§7 preview."
+  );
+}
 
 const dripToolsPrefix = "§5§kA§a[§bDripTools§a]§5§kA§r§a ";
 
@@ -220,14 +251,15 @@ register("chat", (event) => {
 });
 
 let flareTicksRemaining = 0;
+let flareTimerIsHidden = false;
 
 register("playerInteract", () => {
-  if (
-    !Settings.flareTimer ||
-    flareTicksRemaining >= (180 - 20) * 20 // 180 seconds - 20 seconds because of cooldown
-  ) {
-    return;
-  }
+  if (!Settings.flareTimer) return;
+  if (flareTicksRemaining >= (180 - 20) * 20) return; // 180 seconds - 20 seconds because of cooldown)
+  if (!Player.getHeldItem()) return;
+
+  flareTimerIsHidden = false;
+
   const itemNBT = Player.getHeldItem().getRawNBT();
   if (
     itemNBT.includes("WARNING_FLARE") ||
@@ -255,7 +287,7 @@ register("chat", (event) => {
       "&r&eYour flare disappeared because you were too far away!&r"
     )
   ) {
-    flareTicksRemaining = 0;
+    flareTimerIsHidden = true;
   }
 });
 
@@ -264,18 +296,22 @@ register("worldUnload", () => {
 });
 
 register("renderOverlay", () => {
-  if (flareTicksRemaining <= 0) {
+  if (flareTicksRemaining <= 0 || flareTimerIsHidden) {
     return;
   }
   const text = new Text(
-    "Flare: " +
-      (flareTicksRemaining / 20).toFixed(Settings.flareTimerDecimals) +
-      "s",
-    20,
-    20
+    Settings.flareTimerTemplate.replace(
+      "[time]",
+      (flareTicksRemaining / 20).toFixed(Settings.flareTimerDecimals)
+    ),
+    Math.round(Settings.flareX / Renderer.screen.getScale()),
+    Math.round(Settings.flareY / Renderer.screen.getScale())
   );
   const colors = [
-    Renderer.getRainbow(flareTicksRemaining, 200/Settings.flareTimerRainbowSpeed),
+    Renderer.getRainbow(
+      flareTicksRemaining,
+      200 / Settings.flareTimerRainbowSpeed
+    ),
     Renderer.DARK_RED,
     Renderer.RED,
     Renderer.GOLD,
@@ -295,8 +331,11 @@ register("renderOverlay", () => {
   ];
 
   text.setColor(colors[Settings.flareTimerColour]);
-  text.setShadow(true);
+  text.setShadow(Settings.flareTimerShadow);
+  text.setScale(Settings.flareScale / 5);
   text.draw();
+});
 
-  //todo Add option to change position of text
+register("tick", () => {
+
 });

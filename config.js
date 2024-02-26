@@ -1,9 +1,9 @@
 // prettier-ignore
-import { @Vigilant, @TextProperty, @ColorProperty, @ButtonProperty, @SwitchProperty, Color, @CheckboxProperty, @SelectorProperty, @SliderProperty } from 'Vigilance';
+import { @Vigilant, @TextProperty, @ColorProperty, @ButtonProperty, @SwitchProperty, Color, @CheckboxProperty, @SelectorProperty, @SliderProperty, @NumberProperty } from 'Vigilance';
 
 @Vigilant("DripTools", "Settings", {
   getCategoryComparator: () => (a, b) => {
-    const categories = ["Chat Utilities", "Hiders", "Other"];
+    const categories = ["Chat Utilities", "Hiders", "Flare Timer"];
     return categories.indexOf(a.name) - categories.indexOf(b.name);
   },
   getSubcategoryComparator: () => (a, b) => {
@@ -111,49 +111,98 @@ class Settings {
   @SwitchProperty({
     name: "Start Message With Caps",
     description:
-      "Replaces the first character of your message with a capital letter",
+    "Replaces the first character of your message with a capital letter",
     category: "Chat Utilities",
     subcategory: "Replacements",
   })
   autoCaps = false;
-
+  
   @SwitchProperty({
     name: "Flare Timer",
     description:
-      "Puts up a timer for when the flare will expire",
-    category: "Other",
+    "Puts up a timer for when the flare will expire",
+    category: "Flare Timer",
     subcategory: "Flare Timer",
   })
   flareTimer = false;
-
+  
   @SliderProperty({
     name: "Flare Timer Decimals",
     description: "Select the amount of decimals displayed on the flare timer",
-    category: "Other",
+    category: "Flare Timer",
     subcategory: "Flare Timer",
     min: 0,
     max: 2,
   })
   flareTimerDecimals = 0;
 
+  @TextProperty({
+    name: "Flare Timer Template",
+    description: "Set the way in which the text around the timer is displayed.\nUse [time] to insert the time left",
+    category: "Flare Timer",
+    subcategory: "Flare Timer",
+    placeholder: "Empty is disabled...",
+  })
+  flareTimerTemplate = "Flare: [time]s";
+  
+  @SliderProperty({
+    name: "Flare X",
+    description: "Set the x position of the flare timer.\n§a§lPro tip: §r§7Use use §6/dt setflare [x] [y]§7 to adjust the position.",
+    category: "Flare Timer",
+    subcategory: "Flare Timer",
+    min: 0,
+    max: Renderer.screen.getWidth() * Renderer.screen.getScale(),
+  })
+  flareX = 0;
+  
+  @SliderProperty({
+    name: "Flare Y",
+    description: "Set the y position of the flare timer.\n§a§lPro tip: §r§7Use use §6/dt setflare [x] [y]§7 to adjust the position.",
+    category: "Flare Timer",
+    subcategory: "Flare Timer",
+    min: 0,
+    max: Renderer.screen.getHeight() * Renderer.screen.getScale(),
+  })
+  flareY = 0;
+  
+  @SliderProperty({
+    name: "Flare Scale",
+    description: "Set the scale of the flare timer (5 is default)",
+    category: "Flare Timer",
+    subcategory: "Flare Timer",
+    min: 1,
+    max: 25,
+  })
+  flareScale = 5;
+
   @SelectorProperty({
     name: "Flare Timer Color",
     description: "Select a color for the flare timer to be displayed in",
-    category: "Other",
+    category: "Flare Timer",
     subcategory: "Flare Timer",
     options: ["§zRainbow", "§4Dark Red", "§cRed", "§6Gold", "§eYellow", "§2Dark Green", "§aGreen", "§bAqua", "§3Dark Aqua", "§1Dark Blue", "§9Blue", "§dLight Purple", "§5Dark Purple", "§fWhite", "§7Gray", "§8Dark Gray", "§0Black"]
   })
   flareTimerColour = 0;
-
+  
   @SliderProperty({
     name: "Rainbow Speed",
     description: "Select the speed of the rainbow effect",
-    category: "Other",
+    category: "Flare Timer",
     subcategory: "Flare Timer",
     min: 1,
     max: 50,
+    hidden: false,
   })
   flareTimerRainbowSpeed = 10;
+
+  @SwitchProperty({
+    name: "Flare Shadow Toggle",
+    description: "Toggle shadow for the flare timer on or off",
+    category: "Flare Timer",
+    subcategory: "Flare Timer",
+  })
+  flareTimerShadow = true;
+
 
   constructor() {
     this.initialize(this);
