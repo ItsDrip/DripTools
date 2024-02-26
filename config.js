@@ -7,7 +7,7 @@ import { @Vigilant, @TextProperty, @ColorProperty, @ButtonProperty, @SwitchPrope
     return categories.indexOf(a.name) - categories.indexOf(b.name);
   },
   getSubcategoryComparator: () => (a, b) => {
-    const subcategories = ["Vanquishers", "Replacements", "Auto Caps", "Chat prefixes", "Messages"];
+    const subcategories = ["Vanquishers", "Replacements", "HOTM", "Auto Caps", "Chat prefixes", "Messages"];
 
     return (
       subcategories.indexOf(a.getValue()[0].attributesExt.subcategory) -
@@ -251,6 +251,14 @@ class Settings {
     category: "Hiders",
   })
   fireSaleHider = false;
+
+  @SwitchProperty({
+    name: "Sky Mall Changer",
+    description: "Changes the Sky Mall message, reformatting it to §r§2§lSkyMall §6§lBuff§r: Mining buff",
+    category: "Chat Utilities",
+    subcategory: "HOTM",
+  })
+  skyMallHider = false;
   
 
   constructor() {

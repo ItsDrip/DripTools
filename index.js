@@ -16,8 +16,8 @@ register("command", (arg1, arg2, arg3) => {
 }).setName("dt", true);
 
 function setFlareCords(x, y) {
-  x = Number(x.replace(/[^0-9.]/g, ''));
-  y = Number(y.replace(/[^0-9.]/g, ''));
+  x = Number(x.replace(/[^0-9.]/g, ""));
+  y = Number(y.replace(/[^0-9.]/g, ""));
   if (isNaN(x) || isNaN(y)) {
     ChatLib.chat(
       dripToolsPrefix +
@@ -27,7 +27,7 @@ function setFlareCords(x, y) {
   }
   Settings.flareX = x;
   Settings.flareY = y;
-  if (flareTicksRemaining >= 100){
+  if (flareTicksRemaining >= 100) {
     ChatLib.chat(
       dripToolsPrefix +
         "§7Flare cords set to §6" +
@@ -486,7 +486,35 @@ register("chat", (event) => {
     return;
   }
   let message = ChatLib.getChatMessage(event, true);
-  if (message.includes("♨") || message.includes("&6&k&lA&r &c&lFIRE SALE &r&6&k&lA&r")) {
+  if (
+    message.includes("♨") ||
+    message.includes("&6&k&lA&r &c&lFIRE SALE &r&6&k&lA&r")
+  ) {
     cancel(event);
+  }
+});
+
+register("chat", (event) => {
+  if (!Settings.skyMallHider) {
+    return;
+  }
+  let message = ChatLib.getChatMessage(event, true);
+  if (
+    message.includes(
+      "&r&bNew day! &r&eYour &r&2Sky Mall &r&ebuff changed!&r"
+    ) ||
+    message.includes(
+      "&r&8&oYou can disable this messaging by toggling Sky Mall in your /hotm!&r"
+    )
+  ) {
+    cancel(event);
+  }
+  if (message.includes("&r&eNew buff&r&r&r: ")) {
+    cancel(event);
+    let newMessage = message.replace(
+      "&r&eNew buff&r&r&r: ",
+      "§r§2§lSkyMall §6§lBuff§r: "
+    );
+    ChatLib.chat(newMessage);
   }
 });
