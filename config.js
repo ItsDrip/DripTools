@@ -1,13 +1,13 @@
 // prettier-ignore
 import { @Vigilant, @TextProperty, @ColorProperty, @ButtonProperty, @SwitchProperty, Color, @CheckboxProperty, @SelectorProperty, @SliderProperty, @NumberProperty } from 'Vigilance';
 
-@Vigilant("DripTools", "Settings", {
+@Vigilant("DripTools", "DripTools Settings", {
   getCategoryComparator: () => (a, b) => {
-    const categories = ["Chat Utilities", "Hiders", "Flare Timer"];
+    const categories = ["Chat Utilities", "Hiders", "Flare Timer", "Other"];
     return categories.indexOf(a.name) - categories.indexOf(b.name);
   },
   getSubcategoryComparator: () => (a, b) => {
-    const subcategories = ["Vanquishers", "Replacements", "Chat prefixes", "Messages"];
+    const subcategories = ["Vanquishers", "Replacements", "Auto Caps", "Chat prefixes", "Messages"];
 
     return (
       subcategories.indexOf(a.getValue()[0].attributesExt.subcategory) -
@@ -24,6 +24,15 @@ class Settings {
     options: ["OFF", "ALL", "PARTY", "GUILD", "COOP"],
   })
   vanquisherMode = 0;
+
+  @TextProperty({
+    name: "Customize Vanquisher Message",
+    description: "Use [x], [y], [z], and [loc] to replace coordinates and location",
+    placeholder: "Write your own message here...",
+    category: "Chat Utilities",
+    subcategory: "Vanquishers",
+  })
+  vanquisherMessageTemplate = "A Vanquisher has spawned at [x] [y] [z] ([loc])";
 
   @SwitchProperty({
     name: "Implosion Hider",
@@ -113,7 +122,7 @@ class Settings {
     description:
     "Replaces the first character of your message with a capital letter",
     category: "Chat Utilities",
-    subcategory: "Replacements",
+    subcategory: "Auto Caps",
   })
   autoCaps = false;
   
@@ -203,6 +212,46 @@ class Settings {
   })
   flareTimerShadow = true;
 
+
+  @SwitchProperty({
+    name: "Ignore Single Character Messages",
+    description:
+      "Doesn't capitalize messages that are only a single character long",
+    category: "Chat Utilities",
+    subcategory: "Auto Caps",
+  })
+  autoCapsIgnoreSingleChar = false;
+
+  @SwitchProperty({
+    name: "Profile Id Hider",
+    description: "Hides the \"§8Profile id:§r\"-message when switching lobbies",
+    category: "Hiders",
+  })
+  profileIdHider = false;
+
+  @SwitchProperty({
+    name: "Enable Overflow Skills",
+    description: "Enable showing overflow skill levels",
+    category: "Other",
+    subcategory: "Overflow Skills",
+  })
+  overflowSkills = false;
+
+  @SwitchProperty({
+    name: "Rainbowify Maxed Skills",
+    description: "Uses SBA's §zChroma§r to make the skills rainbow for which you have reached the max level",
+    category: "Other",
+    subcategory: "Overflow Skills",
+  })
+  rainbowOverFlowSkills = false;
+
+  @SwitchProperty({
+    name: "Fire Sale Hider",
+    description: "Hides the fire sale messages: §c♨ §5Random Skin §e(69420 §eleft)§c§r",
+    category: "Hiders",
+  })
+  fireSaleHider = false;
+  
 
   constructor() {
     this.initialize(this);

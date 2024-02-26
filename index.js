@@ -2,6 +2,8 @@
 /// <reference lib="es2015" />
 
 import Settings from "./config";
+import { romanToNumber, numberToRoman } from "./utils/romanNumerals";
+import { getLevelByExp, getExpByLevel } from "./utils/skillExpMappings";
 
 register("command", (arg1, arg2, arg3) => {
   if (!arg1) {
@@ -50,30 +52,20 @@ function setFlareCords(x, y) {
 const dripToolsPrefix = "§5§kA§a[§bDripTools§a]§5§kA§r§a ";
 
 register("chat", (event) => {
+  if (Settings.vanquisherMode === 0) {
+    return;
+  }
+
   if (
     ChatLib.getChatMessage(event, true).includes(
       "&r&aA &r&cVanquisher &r&ais spawning nearby!&r"
     )
   ) {
-    let messagePrefix;
+    let messageChat;
     let playerLocation;
 
-    switch (Settings.vanquisherMode) {
-      case 1:
-        messagePrefix = "ac";
-        break;
-      case 2:
-        messagePrefix = "pc";
-        break;
-      case 3:
-        messagePrefix = "gc";
-        break;
-      case 4:
-        messagePrefix = "cc";
-        break;
-      default:
-        return;
-    }
+    let availableChats = ["ac", "pc", "gc", "cc"];
+    messageChat = availableChats[Settings.vanquisherMode - 1];
 
     for (i = 0; i < Scoreboard.getLines().length; i++) {
       let scoreBoardLine = String(Scoreboard.getLineByIndex(i));
@@ -83,18 +75,13 @@ register("chat", (event) => {
       }
     }
 
-    ChatLib.command(
-      messagePrefix +
-        " A Vanquisher has spawned at " +
-        Math.round(Player.getX()) +
-        " " +
-        Math.round(Player.getY()) +
-        " " +
-        Math.round(Player.getZ()) +
-        " (" +
-        playerLocation +
-        ")"
-    );
+    let message = Settings.vanquisherMessageTemplate
+      .replace("[x]", Math.round(Player.getX()))
+      .replace("[y]", Math.round(Player.getY()))
+      .replace("[z]", Math.round(Player.getZ()))
+      .replace("[loc]", playerLocation);
+
+    ChatLib.command(messageChat + " " + message);
   }
 });
 
@@ -242,6 +229,11 @@ register("messageSent", (message, event) => {
   ) {
     return;
   }
+
+  if (Settings.autoCapsIgnoreSingleChar && message.length === 1) {
+    return;
+  }
+
   const capitalizedMessage = message.charAt(0).toUpperCase() + message.slice(1);
   cancel(event);
   ChatLib.say(capitalizedMessage);
@@ -349,4 +341,155 @@ register("renderOverlay", () => {
 
 register("tick", () => {
 
+=======
+register("chat", (event) => {
+  if (!Settings.profileIdHider) {
+    return;
+  }
+  let message = ChatLib.getChatMessage(event, true);
+  if (message.includes("&r&8Profile ID: ")) {
+    cancel(event);
+  }
+});
+
+newSkillLevels = {
+  combat: -1,
+  farming: -1,
+  fishing: -1,
+  mining: -1,
+  foraging: -1,
+  enchanting: -1,
+  alchemy: -1,
+  carpentry: -1,
+  runecrafting: -1,
+  taming: -1,
+  social: -1,
+};
+
+// ? edit lore option?
+// ? add option to change the skill level scaling?
+register("tick", () => {
+  if (!Settings.overflowSkills) {
+    return;
+  }
+  if (Player.getContainer().getName() !== "Your Skills") {
+    if (newSkillLevels.combat !== -1) {
+      newSkillLevels = {
+        combat: -1,
+        farming: -1,
+        fishing: -1,
+        mining: -1,
+        foraging: -1,
+        enchanting: -1,
+        alchemy: -1,
+        carpentry: -1,
+        runecrafting: -1,
+        taming: -1,
+        social: -1,
+      };
+    }
+    return;
+  }
+
+  Player.getContainer()
+    .getItems()
+    .forEach((item) => {
+      if (item === null) {
+        return;
+      }
+      let currentSkill = item
+        .getName()
+        .slice(2, item.getName().indexOf(" "))
+        .toLowerCase();
+      if (newSkillLevels[currentSkill] !== -1) {
+        item.setName(
+          getNameForNewSkillLevel(item, newSkillLevels[currentSkill])
+        );
+        return;
+      }
+      var newName = getNewSkillLevelName(item.getLore(), item);
+      if (newName !== undefined) {
+        item.setName(newName);
+      }
+    });
+});
+
+function getNewSkillLevelName(lore, item) {
+  let expNumber = getSkillOverFlowFromItem(lore);
+  let expLevel = getSkillLevelFromItem(item);
+
+  if (expAmountIsOverFlow(lore)) {
+    expLevel -= 1;
+  }
+
+  let newSkillLevel = getLevelByExp(getExpByLevel(expLevel) + expNumber);
+
+  newSkillLevels[
+    item.getName().slice(2, item.getName().indexOf(" ")).toLowerCase()
+  ] = newSkillLevel;
+
+  return getNameForNewSkillLevel(item, newSkillLevel);
+}
+
+function getSkillLevelFromItem(item) {
+  let itemName = item.getName();
+  let romanRegex = / (I|V|X|L|C)+/g;
+  if (itemName.match(romanRegex) == null) {
+    return null;
+  }
+  return romanToNumber(itemName.match(romanRegex)[0].trim());
+}
+
+function getSkillOverFlowFromItem(lore) {
+  let loreString = lore.toLocaleString().replace(/,/g, "");
+  let overFlowExpRegex = /§r (§6|§e)(\d+)/g;
+  let overflowExpText = loreString.match(overFlowExpRegex);
+  if (overflowExpText == null) {
+    return null;
+  }
+  return Number(overflowExpText[0].slice(5));
+}
+
+function expAmountIsOverFlow(lore) {
+  let loreString = lore.toLocaleString().replace(/,/g, "");
+  if (loreString.includes("§8Max Skill level reached!")) {
+    return true;
+  }
+
+  let progressToNextLevel = loreString.match(/§e(\d+\.?\d*)%/);
+  if (progressToNextLevel != null) {
+    if (progressToNextLevel[1] > 100) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function skillIsMaxed(lore) {
+  let loreString = lore.toLocaleString().replace(/,/g, "");
+  if (loreString.includes("§8Max Skill level reached!")) {
+    return true;
+  }
+  return false;
+}
+
+function getNameForNewSkillLevel(item, newSkillLevel) {
+  let romanRegex = / (I|V|X|L|C)+/g;
+  let newSkillTitle = item
+    .getName()
+    .replace(romanRegex, " " + numberToRoman(newSkillLevel));
+  if (Settings.rainbowOverFlowSkills && skillIsMaxed(item.getLore())) {
+    newSkillTitle = newSkillTitle.replace("§a", "§z");
+  }
+  return newSkillTitle;
+}
+
+register("chat", (event) => {
+  if (!Settings.fireSaleHider) {
+    return;
+  }
+  let message = ChatLib.getChatMessage(event, true);
+  if (message.includes("♨") || message.includes("&6&k&lA&r &c&lFIRE SALE &r&6&k&lA&r")) {
+    cancel(event);
+  }
 });
