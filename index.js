@@ -5,7 +5,49 @@ import Settings from "./config";
 import { romanToNumber, numberToRoman } from "./utils/romanNumerals";
 import { getLevelByExp, getExpByLevel } from "./utils/skillExpMappings";
 
-register("command", () => Settings.openGUI()).setName("dt", true);
+register("command", (arg1, arg2, arg3) => {
+  if (!arg1) {
+    Settings.openGUI();
+  }
+
+  if (arg1 === "setflare") {
+    setFlareCords(arg2, arg3);
+  }
+}).setName("dt", true);
+
+function setFlareCords(x, y) {
+  x = Number(x.replace(/[^0-9.]/g, ''));
+  y = Number(y.replace(/[^0-9.]/g, ''));
+  if (isNaN(x) || isNaN(y)) {
+    ChatLib.chat(
+      dripToolsPrefix +
+        "§cInvalid coordinates! Please use §6/dt setflare [x] [y]§c."
+    );
+    return;
+  }
+  Settings.flareX = x;
+  Settings.flareY = y;
+  if (flareTicksRemaining >= 100){
+    ChatLib.chat(
+      dripToolsPrefix +
+        "§7Flare cords set to §6" +
+        Settings.flareX +
+        "§7, §6" +
+        Settings.flareY +
+        "§7!"
+    );
+  } else {
+    flareTicksRemaining = 100;
+    ChatLib.chat(
+      dripToolsPrefix +
+        "§7Flare cords set to §6" +
+        Settings.flareX +
+        "§7, §6" +
+        Settings.flareY +
+        "§7!\n§7Showing a §b5 second§7 preview."
+    );
+  }
+}
 
 const dripToolsPrefix = "§5§kA§a[§bDripTools§a]§5§kA§r§a ";
 
@@ -211,6 +253,95 @@ register("chat", (event) => {
   }
 });
 
+let flareTicksRemaining = 0;
+let flareTimerIsHidden = false;
+
+register("playerInteract", () => {
+  if (!Settings.flareTimer) return;
+  if (flareTicksRemaining >= (180 - 20) * 20) return; // 180 seconds - 20 seconds because of cooldown)
+  if (!Player.getHeldItem()) return;
+
+  flareTimerIsHidden = false;
+
+  const itemNBT = Player.getHeldItem().getRawNBT();
+  if (
+    itemNBT.includes("WARNING_FLARE") ||
+    itemNBT.includes("ALERT_FLARE") ||
+    itemNBT.includes("SOS_FLARE")
+  ) {
+    flareTicksRemaining = 180 * 20; // 180 seconds * 20 ticks per second
+  }
+});
+
+register("tick", () => {
+  if (flareTicksRemaining > 0) {
+    flareTicksRemaining--;
+  }
+});
+
+register("chat", (event) => {
+  if (!Settings.flareTimer) {
+    return;
+  }
+  let message = ChatLib.getChatMessage(event, true);
+
+  if (
+    message.includes(
+      "&r&eYour flare disappeared because you were too far away!&r"
+    )
+  ) {
+    flareTimerIsHidden = true;
+  }
+});
+
+register("worldUnload", () => {
+  flareTicksRemaining = 0;
+});
+
+register("renderOverlay", () => {
+  if (flareTicksRemaining <= 0 || flareTimerIsHidden) {
+    return;
+  }
+  const text = new Text(
+    Settings.flareTimerTemplate.replace(
+      "[time]",
+      (flareTicksRemaining / 20).toFixed(Settings.flareTimerDecimals)
+    ),
+    Math.round(Settings.flareX / Renderer.screen.getScale()),
+    Math.round(Settings.flareY / Renderer.screen.getScale())
+  );
+  const colors = [
+    Renderer.getRainbow(
+      flareTicksRemaining,
+      200 / Settings.flareTimerRainbowSpeed
+    ),
+    Renderer.DARK_RED,
+    Renderer.RED,
+    Renderer.GOLD,
+    Renderer.YELLOW,
+    Renderer.DARK_GREEN,
+    Renderer.GREEN,
+    Renderer.AQUA,
+    Renderer.DARK_AQUA,
+    Renderer.DARK_BLUE,
+    Renderer.BLUE,
+    Renderer.LIGHT_PURPLE,
+    Renderer.DARK_PURPLE,
+    Renderer.WHITE,
+    Renderer.GRAY,
+    Renderer.DARK_GRAY,
+    Renderer.BLACK,
+  ];
+
+  text.setColor(colors[Settings.flareTimerColour]);
+  text.setShadow(Settings.flareTimerShadow);
+  text.setScale(Settings.flareScale / 5);
+  text.draw();
+});
+
+register("tick", () => {
+
+=======
 register("chat", (event) => {
   if (!Settings.profileIdHider) {
     return;
