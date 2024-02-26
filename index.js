@@ -339,9 +339,6 @@ register("renderOverlay", () => {
   text.draw();
 });
 
-register("tick", () => {
-
-=======
 register("chat", (event) => {
   if (!Settings.profileIdHider) {
     return;

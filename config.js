@@ -21,7 +21,7 @@ class Settings {
     description: "Select a chat to send vanquisher notifications to",
     category: "Chat Utilities",
     subcategory: "Vanquishers",
-    options: ["OFF", "ALL", "PARTY", "GUILD", "COOP"],
+    options: ["OFF", "§f§lALL", "§1§lPARTY", "§2§lGUILD", "§b§lCOOP"],
   })
   vanquisherMode = 0;
 
