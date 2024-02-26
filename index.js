@@ -25,15 +25,26 @@ function setFlareCords(x, y) {
   }
   Settings.flareX = x;
   Settings.flareY = y;
-  flareTicksRemaining += 100;
-  ChatLib.chat(
-    dripToolsPrefix +
-      "§7Flare cords set to §6" +
-      Settings.flareX +
-      "§7, §6" +
-      Settings.flareY +
-      "§7!\n§7Showing a §b5 second§7 preview."
-  );
+  if (flareTicksRemaining >= 100){
+    ChatLib.chat(
+      dripToolsPrefix +
+        "§7Flare cords set to §6" +
+        Settings.flareX +
+        "§7, §6" +
+        Settings.flareY +
+        "§7!"
+    );
+  } else {
+    flareTicksRemaining = 100;
+    ChatLib.chat(
+      dripToolsPrefix +
+        "§7Flare cords set to §6" +
+        Settings.flareX +
+        "§7, §6" +
+        Settings.flareY +
+        "§7!\n§7Showing a §b5 second§7 preview."
+    );
+  }
 }
 
 const dripToolsPrefix = "§5§kA§a[§bDripTools§a]§5§kA§r§a ";
