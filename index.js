@@ -2,6 +2,9 @@
 /// <reference lib="es2015" />
 
 import Settings from "./config";
+import { vanquisherChat } from "./features/vanquisherChat";
+import { fireSaleHider } from "./hiders/fireSaleHider";
+import { profileIdHider } from "./hiders/profileIdHider";
 import { romanToNumber, numberToRoman } from "./utils/romanNumerals";
 import { getLevelByExp, getExpByLevel } from "./utils/skillExpMappings";
 
@@ -14,6 +17,10 @@ register("command", (arg1, arg2, arg3) => {
     setFlareCords(arg2, arg3);
   }
 }).setName("dt", true);
+
+register("chat", fireSaleHider);
+register("chat", profileIdHider);
+register("chat", vanquisherChat);
 
 function setFlareCords(x, y) {
   x = Number(x.replace(/[^0-9.]/g, ""));
@@ -51,39 +58,7 @@ function setFlareCords(x, y) {
 
 const dripToolsPrefix = "§5§kA§a[§bDripTools§a]§5§kA§r§a ";
 
-register("chat", (event) => {
-  if (Settings.vanquisherMode === 0) {
-    return;
-  }
 
-  if (
-    ChatLib.getChatMessage(event, true).includes(
-      "&r&aA &r&cVanquisher &r&ais spawning nearby!&r"
-    )
-  ) {
-    let messageChat;
-    let playerLocation;
-
-    let availableChats = ["ac", "pc", "gc", "cc"];
-    messageChat = availableChats[Settings.vanquisherMode - 1];
-
-    for (i = 0; i < Scoreboard.getLines().length; i++) {
-      let scoreBoardLine = String(Scoreboard.getLineByIndex(i));
-
-      if (scoreBoardLine.includes("⏣")) {
-        playerLocation = scoreBoardLine.replace(/§./g, "").replace(/ ⏣ /g, "");
-      }
-    }
-
-    let message = Settings.vanquisherMessageTemplate
-      .replace("[x]", Math.round(Player.getX()))
-      .replace("[y]", Math.round(Player.getY()))
-      .replace("[z]", Math.round(Player.getZ()))
-      .replace("[loc]", playerLocation);
-
-    ChatLib.command(messageChat + " " + message);
-  }
-});
 
 register("chat", (event) => {
   if (!Settings.implosionHider) {
@@ -482,19 +457,6 @@ function getNameForNewSkillLevel(item, newSkillLevel) {
 }
 
 register("chat", (event) => {
-  if (!Settings.fireSaleHider) {
-    return;
-  }
-  let message = ChatLib.getChatMessage(event, true);
-  if (
-    message.includes("♨") ||
-    message.includes("&6&k&lA&r &c&lFIRE SALE &r&6&k&lA&r")
-  ) {
-    cancel(event);
-  }
-});
-
-register("chat", (event) => {
   if (!Settings.skyMallHider) {
     return;
   }
@@ -518,3 +480,4 @@ register("chat", (event) => {
     ChatLib.chat(newMessage);
   }
 });
+

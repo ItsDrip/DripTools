@@ -1,13 +1,50 @@
 
+[flare_timer]
+
+	[flare_timer.flare_timer]
+		flare_timer = true
+		flare_timer_shadow_color = "0,138,66,66"
+		flare_x = 1600
+		flare_timer_template = "Flare: [time]s"
+		flare_timer_decimals = 1
+		flare_shadow_toggle = true
+		flare_timer_color = 0
+		flare_scale = 5
+		rainbow_speed = 5
+		flare_y = 200
+
+[other]
+
+	[other.flare_timer]
+		flare_timer = true
+		flare_timer_shadow_toggle = true
+		flare_x = 800
+		flare_timer_template = "Flare: [time]s"
+		flare_timer_decimals = 2
+		flare_shadow_toggle = true
+		flare_timer_shadow_type = true
+		flare_timer_color = 5
+		rainbow_speed = 10
+		flare_scale = 5
+		flare_y = 400
+
+	[other.overflow_skills]
+		enable_overflow_skills = true
+		rainbowify_maxed_skills = true
+
 [chat_utilities]
 
+	[chat_utilities.hotm]
+		sky_mall_changer = true
+
 	[chat_utilities.vanquishers]
-		vanquisher_notifications = 0
+		vanquisher_notifications = 1
+		customize_vanquisher_message = "A Vanquisher has spawned at [x] [y] [z] ([loc])"
 
 	[chat_utilities.messages]
 		kicked_message = "I have been kicked from SkyBlock! You can warp me back in a minute!"
 		bingo_message = "Tysm!"
-		watchdog_message = "Thanks, watchdog!"
+		watchdog_message = ""
 
 	[chat_utilities.chat_prefixes]
 		shorten_party_chat = false
@@ -15,10 +52,19 @@
 		shorten_guild_chat = false
 
 	[chat_utilities.replacements]
-		"post_coordinates_with_[cords]" = false
-		start_message_with_caps = false
+		"post_coordinates_with_[cords]" = true
+		start_message_with_caps = true
+
+	[chat_utilities.auto_caps]
+		ignore_single_character_messages = true
+		start_message_with_caps = true
 
 [hiders]
-	implosion_hider = false
-	watchdog_hider = false
+	implosion_hider = true
+	watchdog_hider = true
+	sky_mall_changer = true
+	sky_mall_hider = true
+	witch_mask_hider = true
+	fire_sale_hider = true
+	profile_id_hider = true
 
