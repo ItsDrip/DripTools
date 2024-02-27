@@ -518,3 +518,16 @@ register("chat", (event) => {
     ChatLib.chat(newMessage);
   }
 });
+
+register("chat", (event) => {
+  if (!Settings.guildExpHider) {
+    return;
+  }
+
+  let message = ChatLib.getChatMessage(event, true);
+  let regex = /&r&aYou earned &r&2\d+ GEXP &r&afrom playing SkyBlock!&r/;
+
+  if (regex.test(message)) {
+    cancel(event);
+  }
+});

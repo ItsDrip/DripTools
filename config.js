@@ -259,6 +259,13 @@ class Settings {
     subcategory: "HOTM",
   })
   skyMallHider = false;
+
+  @SwitchProperty({
+    name: "Guild Exp Hider",
+    description: "Hides the §r§aYou earned §r§2420 GEXP §r§afrom playing SkyBlock!§r -message",
+    category: "Hiders",
+  })
+  guildExpHider = false;
   
 
   constructor() {
