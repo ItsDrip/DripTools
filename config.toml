@@ -1,8 +1,31 @@
 
+[flare_timer]
+
+	[flare_timer.flare_timer]
+		flare_timer = false
+		flare_x = 0
+		flare_timer_template = "Flare: [time]s"
+		flare_timer_decimals = 0
+		flare_shadow_toggle = true
+		flare_timer_color = 0
+		flare_scale = 5
+		rainbow_speed = 10
+		flare_y = 0
+
+[other]
+
+	[other.overflow_skills]
+		enable_overflow_skills = false
+		rainbowify_maxed_skills = false
+
 [chat_utilities]
+
+	[chat_utilities.hotm]
+		sky_mall_changer = false
 
 	[chat_utilities.vanquishers]
 		vanquisher_notifications = 0
+		customize_vanquisher_message = "A Vanquisher has spawned at [x] [y] [z] ([loc])"
 
 	[chat_utilities.messages]
 		kicked_message = "I have been kicked from SkyBlock! You can warp me back in a minute!"
@@ -16,9 +39,16 @@
 
 	[chat_utilities.replacements]
 		"post_coordinates_with_[cords]" = false
+
+	[chat_utilities.auto_caps]
+		ignore_single_character_messages = false
 		start_message_with_caps = false
 
 [hiders]
 	implosion_hider = false
 	watchdog_hider = false
+	witch_mask_hider = false
+	fire_sale_hider = false
+	guild_exp_hider = false
+	profile_id_hider = false
 
