@@ -266,6 +266,13 @@ class Settings {
     category: "Hiders",
   })
   guildExpHider = false;
+
+  @SwitchProperty({
+    name: "Lobby Join Hider",
+    description: "Hides the §r§b[MVP§c+§b] Randomguy§f §6joined the lobby!§r -message",
+    category: "Hiders",
+  })
+  lobbyJoinHider = false;
   
 
   constructor() {
