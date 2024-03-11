@@ -531,3 +531,15 @@ register("chat", (event) => {
     cancel(event);
   }
 });
+
+register("chat", (event) => {
+  if (!Settings.lobbyJoinHider) {
+    return;
+  }
+
+  let message = ChatLib.getChatMessage(event, true);
+
+  if (message.includes("&f &6joined the lobby!&r") || message.includes("&f &6joined the lobby!&r &a<&c<&b<&r")) {
+    cancel(event);
+  }
+});
