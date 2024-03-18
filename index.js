@@ -525,7 +525,7 @@ register("chat", (event) => {
   }
 
   let message = ChatLib.getChatMessage(event, true);
-  let regex = /&r&aYou earned &r&2\d+ GEXP &r&afrom playing SkyBlock!&r/;
+  let regex = /&r&aYou earned &r&2\d+ GEXP &r&a/;
 
   if (regex.test(message)) {
     cancel(event);
