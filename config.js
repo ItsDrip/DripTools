@@ -273,6 +273,13 @@ class Settings {
     category: "Hiders",
   })
   lobbyJoinHider = false;
+
+  @SwitchProperty({
+    name: "Pest Drop Message Changer",
+    description: "Changes the message whenever you drop an item from a pest to one that looks like magic find",
+    category: "Hiders",
+  })
+  pestDropChanger = false;
   
 
   constructor() {
