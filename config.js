@@ -280,7 +280,13 @@ class Settings {
     category: "Hiders",
   })
   pestDropChanger = false;
-  
+
+  @SwitchProperty({
+    name: "SkyBlock Animation Hider",
+    description: "Hides the §r§bSkyBlock§r animation",
+    category: "Hiders",
+  })
+  skyBlockAnimationHider = false;
 
   constructor() {
     this.initialize(this);
