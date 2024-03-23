@@ -542,7 +542,9 @@ register("chat", (event) => {
   if (message.includes("&f &6joined the lobby!&r") || message.includes("&f &6joined the lobby!&r &a<&c<&b<&r")) {
     cancel(event);
   }
-});register("chat", (event) => {
+});
+
+register("chat", (event) => {
   if (!Settings.pestDropChanger) {
     return;
   }
@@ -555,5 +557,16 @@ register("chat", (event) => {
     ChatLib.chat(
       message.replace(regex, "&r&b(+&r&b$1% &r&b☘ Farming Fortune&r&b)&r")
     );
+  }
+});
+
+register("chat", (event) => {
+  if (!Settings.skyBlockAnimationHider) {
+    return;
+  }
+
+  let message = ChatLib.getChatMessage(event, true);
+  if (message.includes("&fOur &aSkyBlock Animation &fhas just released on YouTube!")) {
+    cancel(event);
   }
 });
